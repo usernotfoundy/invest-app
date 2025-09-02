@@ -1,0 +1,21 @@
+{
+  "name": "invest-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vue 3 + Pinia + Vue Router + Axios frontend for Laravel Invest App",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.20",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "laravel-vite-plugin": "^2.0.1",
+    "vite": "^7.1.4"
+  }
+}
