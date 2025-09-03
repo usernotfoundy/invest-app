@@ -8,14 +8,19 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
     "pinia": "^3.0.3",
     "vue": "^3.5.20",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
     "@vitejs/plugin-vue": "^6.0.1",
+    "autoprefixer": "^10.4.21",
     "laravel-vite-plugin": "^2.0.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12",
     "vite": "^7.1.4"
   }
 }
