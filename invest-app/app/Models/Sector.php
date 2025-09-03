@@ -15,6 +15,6 @@ class Sector extends Model
 
     public function children()
     {
-        return $this->hasMany(ChildSectorTable::class, 'sector_id');
+        return $this->hasMany(ChildSector::class, 'sector_id');
     }
 }
