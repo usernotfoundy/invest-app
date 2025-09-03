@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(
     }
 );
 
-Route::middleware(['guest'])->group(
+Route::middleware(['auth:sanctum', 'role:admin'])->group(
     function () {
         Route::post('/register', [RegisteredUserController::class, 'store'])
             ->name('register');

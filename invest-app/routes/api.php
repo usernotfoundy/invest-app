@@ -9,5 +9,3 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 require __DIR__.'/modules/powerbi.php';
-
-require __DIR__.'/modules/users.php';
