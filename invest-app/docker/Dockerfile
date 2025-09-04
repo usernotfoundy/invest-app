@@ -2,7 +2,7 @@ FROM php:8.3-fpm
 
 RUN sed -i 's/9000/9905/' /usr/local/etc/php-fpm.d/zz-docker.conf
 
-WORKDIR /var/www/pgin-invest/invest-app/invest-app
+WORKDIR /var/www/pgin-invest/invest-repo/invest-app
 
 ENV TZ=Asia/Manila
 
@@ -26,7 +26,7 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-COPY --chown=www:www . /var/www/pgin-invest/invest-app/invest-app
+COPY --chown=www:www . /var/www/pgin-invest/invest-repo/invest-app
 
 USER www
 

@@ -11,7 +11,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - .:/var/www/pgin-invest/invest-app/invest-app
+      - .:/var/www/pgin-invest/invest-repo/invest-app
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: INvest-App-PHP
     volumes:
-      - .:/var/www/pgin-invest/invest-app/invest-app
+      - .:/var/www/pgin-invest/invest-repo/invest-app
       - ./docker/php/www.conf:/usr/local/etc/php/conf.d/www.conf
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     restart: always

@@ -82,70 +82,70 @@ class DataInputController extends Controller
     }
 
     public function updateChildData(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'sector_id' => 'required|exists:sectors,id',
-            'child_id' => 'required|exists:child_sectors,id',
-            'data_id' => 'required',
-            'updates' => 'required|array'
-        ]);
-    } catch (ValidationException $e) {
-        return response()->json([
-            'message' => 'Validation failed',
-            'errors' => $e->errors()
-        ], 422);
-    }
-
-    $child = ChildSector::where('id', $validated['child_id'])
-        ->where('sector_id', $validated['sector_id'])
-        ->firstOrFail();
-
-    // Decode stored data
-    $dataArray = is_string($child->data) ? json_decode($child->data, true) : $child->data;
-    if (!is_array($dataArray)) {
-        return response()->json(['message' => 'Invalid data format'], 400);
-    }
-
-    // Decode expected headers from template
-    $expectedHeaders = json_decode($child->data_template, true) ?? [];
-    if (!is_array($expectedHeaders)) {
-        return response()->json(['message' => 'Invalid template format'], 400);
-    }
-
-    // Filter updates → only allow keys that exist in the template
-    $filteredUpdates = array_intersect_key(
-        $validated['updates'],
-        array_flip($expectedHeaders)
-    );
-
-    $found = false;
-    foreach ($dataArray as &$item) {
-        if (isset($item['id']) && $item['id'] == $validated['data_id']) {
-            // Merge only allowed keys
-            $item = array_merge($item, $filteredUpdates);
-            $found = true;
-            break;
+    {
+        try {
+            $validated = $request->validate([
+                'sector_id' => 'required|exists:sectors,id',
+                'child_id' => 'required|exists:child_sectors,id',
+                'data_id' => 'required',
+                'updates' => 'required|array'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         }
+
+        $child = ChildSector::where('id', $validated['child_id'])
+            ->where('sector_id', $validated['sector_id'])
+            ->firstOrFail();
+
+        // Decode stored data
+        $dataArray = is_string($child->data) ? json_decode($child->data, true) : $child->data;
+        if (!is_array($dataArray)) {
+            return response()->json(['message' => 'Invalid data format'], 400);
+        }
+
+        // Decode expected headers from template
+        $expectedHeaders = json_decode($child->data_template, true) ?? [];
+        if (!is_array($expectedHeaders)) {
+            return response()->json(['message' => 'Invalid template format'], 400);
+        }
+
+        // Filter updates → only allow keys that exist in the template
+        $filteredUpdates = array_intersect_key(
+            $validated['updates'],
+            array_flip($expectedHeaders)
+        );
+
+        $found = false;
+        foreach ($dataArray as &$item) {
+            if (isset($item['id']) && $item['id'] == $validated['data_id']) {
+                // Merge only allowed keys
+                $item = array_merge($item, $filteredUpdates);
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            return response()->json(['message' => 'Data with given id not found'], 404);
+        }
+
+        // Save back
+        $child->data = json_encode($dataArray);
+        $child->save();
+
+        return response()->json([
+            'message' => 'Child data updated successfully',
+            'child' => [
+                'id' => $child->id,
+                'name' => $child->name,
+                'data' => $dataArray
+            ]
+        ]);
     }
-
-    if (!$found) {
-        return response()->json(['message' => 'Data with given id not found'], 404);
-    }
-
-    // Save back
-    $child->data = json_encode($dataArray);
-    $child->save();
-
-    return response()->json([
-        'message' => 'Child data updated successfully',
-        'child' => [
-            'id' => $child->id,
-            'name' => $child->name,
-            'data' => $dataArray
-        ]
-    ]);
-}
 
 
     public function viewSectorChildren($sector_id)
@@ -250,56 +250,56 @@ class DataInputController extends Controller
     }
 
     public function deleteChildData(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'sector_id' => 'required|exists:sectors,id',
-            'child_id'  => 'required|exists:child_sectors,id',
-            'data_id'   => 'required'
-        ]);
-    } catch (ValidationException $e) {
+    {
+        try {
+            $validated = $request->validate([
+                'sector_id' => 'required|exists:sectors,id',
+                'child_id'  => 'required|exists:child_sectors,id',
+                'data_id'   => 'required'
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        $child = ChildSector::where('id', $validated['child_id'])
+            ->where('sector_id', $validated['sector_id'])
+            ->firstOrFail();
+
+        // Decode stored data
+        $dataArray = is_string($child->data) ? json_decode($child->data, true) : $child->data;
+        if (!is_array($dataArray)) {
+            return response()->json(['message' => 'Invalid data format'], 400);
+        }
+
+        // Find & delete row by data_id
+        $originalCount = count($dataArray);
+        $dataArray = array_filter($dataArray, function ($item) use ($validated) {
+            return !(isset($item['id']) && $item['id'] == $validated['data_id']);
+        });
+
+        // If no row was removed
+        if (count($dataArray) === $originalCount) {
+            return response()->json(['message' => 'Data with given id not found'], 404);
+        }
+
+        // Reindex array after filtering
+        $dataArray = array_values($dataArray);
+
+        // Save updated JSON
+        $child->data = json_encode($dataArray);
+        $child->save();
+
         return response()->json([
-            'message' => 'Validation failed',
-            'errors' => $e->errors()
-        ], 422);
+            'message' => 'Row deleted successfully',
+            'total_rows' => count($dataArray),
+            'child' => [
+                'id' => $child->id,
+                'name' => $child->name
+            ]
+        ]);
     }
-
-    $child = ChildSector::where('id', $validated['child_id'])
-        ->where('sector_id', $validated['sector_id'])
-        ->firstOrFail();
-
-    // Decode stored data
-    $dataArray = is_string($child->data) ? json_decode($child->data, true) : $child->data;
-    if (!is_array($dataArray)) {
-        return response()->json(['message' => 'Invalid data format'], 400);
-    }
-
-    // Find & delete row by data_id
-    $originalCount = count($dataArray);
-    $dataArray = array_filter($dataArray, function ($item) use ($validated) {
-        return !(isset($item['id']) && $item['id'] == $validated['data_id']);
-    });
-
-    // If no row was removed
-    if (count($dataArray) === $originalCount) {
-        return response()->json(['message' => 'Data with given id not found'], 404);
-    }
-
-    // Reindex array after filtering
-    $dataArray = array_values($dataArray);
-
-    // Save updated JSON
-    $child->data = json_encode($dataArray);
-    $child->save();
-
-    return response()->json([
-        'message' => 'Row deleted successfully',
-        'total_rows' => count($dataArray),
-        'child' => [
-            'id' => $child->id,
-            'name' => $child->name
-        ]
-    ]);
-}
 
 }
