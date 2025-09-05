@@ -32,7 +32,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(
             ->name('assign-sector');
         Route::get('/user-roles/{id}', [UserController::class, 'getUserRoles'])
             ->name('user-roles');
-        Route::delete('/delete-user/{id}', [AuthController::class, 'deleteUser'])
+        Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser'])
             ->name('delete-user');
         Route::get('/user-count', [UserController::class, 'getUserCounts'])
             ->name('user-count');

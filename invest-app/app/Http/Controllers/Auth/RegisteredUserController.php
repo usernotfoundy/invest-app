@@ -32,6 +32,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
+            'assigned_sector' => $request->assignedSector,
         ]);
 
         $user->assignRole($request->role);

@@ -108,4 +108,22 @@ class UserController extends Controller
 
         return response()->json(['roles' => $roles]);
     } 
+
+        public function deleteUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Prevent deleting yourself
+        if (auth()->id() === $user->id) {
+            return response()->json(['message' => 'You cannot delete your own account'], 403);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }
