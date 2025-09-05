@@ -28,8 +28,8 @@ const WebIcon = "/assets/icons/facebook-icon-1.svg"
 // --------------------
 // Computed Properties
 // --------------------
-const isSectorsActive = computed(() =>
-  route.path.startsWith('/sectors')
+const isPriorityIndustries = computed(() =>
+  route.path.startsWith('/priority-industries')
 );
 </script>
 
@@ -59,11 +59,11 @@ const isSectorsActive = computed(() =>
       </li>
 
       <li>
-        <!-- <RouterLink to="/sectors" custom v-slot="{ navigate }">
+        <RouterLink to="/priority-industries" custom v-slot="{ navigate }">
           <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
-            isSectorsActive ? 'btn-active btn-primary' : 'btn-ghost'
+            isPriorityIndustries ? 'btn-active btn-primary' : 'btn-ghost'
           ]">Priority Industries</button>
-        </RouterLink> -->
+        </RouterLink>
       </li>
 
       <li>
