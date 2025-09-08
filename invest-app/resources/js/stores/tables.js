@@ -147,12 +147,9 @@ export const useTableStore = defineStore("table", {
 
     async downloadTemplate(childId, childName) {
       try {
-        const token = localStorage.getItem("token");
-
         const response = await axiosClient.get(
           `/encoding/download-template/${childId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
             responseType: "blob",
           }
         );
@@ -181,7 +178,6 @@ export const useTableStore = defineStore("table", {
 
     async uploadTemplate(file, sectorId, childId) {
       try {
-        const token = localStorage.getItem("token");
         const formData = new FormData();
 
         // match backend keys exactly
@@ -194,7 +190,6 @@ export const useTableStore = defineStore("table", {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "multipart/form-data",
             },
           }
