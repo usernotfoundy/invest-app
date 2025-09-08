@@ -12,19 +12,19 @@ use App\Http\Controllers\Website\WebsiteController;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(
     function () {
-        Route::post('/create-sector-child', [SectorChildController::class, 'createChild'])
+        Route::post('/create-sector-child', [ChildController::class, 'createChild'])
             ->name('create-sector-child');
-        Route::post('/sector-child/clear-data', [SectorChildController::class, 'clearData'])
+        Route::post('/sector-child/clear-data', [ChildController::class, 'clearData'])
             ->name('clear-data-child-sector');
-        Route::get('/sector-child/view-data/{id}', [SectorChildController::class, 'viewChildData'])
+        Route::get('/sector-child/view-data/{id}', [ChildController::class, 'viewChildData'])
             ->name('view-data-child-sector');
-        Route::get('/sector-children/{id}', [SectorChildController::class, 'listChildren'])
+        Route::get('/sector-children/{id}', [ChildController::class, 'listChildren'])
             ->name('sector-children');
-        Route::delete('/sector-child/delete', [SectorChildController::class, 'destroyChild'])
+        Route::delete('/sector-child/delete', [ChildController::class, 'destroyChild'])
             ->name('delete-sector-child');
-        Route::patch('/sector-child/update-template', [SectorChildController::class, 'updateTemplate'])
+        Route::patch('/sector-child/update-template', [ChildController::class, 'updateTemplate'])
             ->name('update-template-child-sector');
-        Route::get('/sector-child/view-template', [SectorChildController::class, 'viewDataTemplate'])
+        Route::get('/sector-child/view-template', [ChildController::class, 'viewDataTemplate'])
             ->name('view-template-child-sector');
     }
 );
