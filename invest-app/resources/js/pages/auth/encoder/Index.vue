@@ -198,7 +198,7 @@ watch(
         <div v-for="child in tableStore.children" :key="child.id" class="mt-5">
           <div v-if="selectedChildId === child.id"
             class="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200"
-            style="max-height: calc(100dvh - 180px);"> <!-- dynamic height, adjust 150px for headers/spacing -->
+            style=" height: calc(100dvh - 150px);"> <!-- dynamic height, adjust 150px for headers/spacing -->
 
             <table class="table table-hover table-auto w-full">
               <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 uppercase">

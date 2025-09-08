@@ -70,21 +70,21 @@ const isSectorsActive = computed(() =>
             </div>
 
             <li class="font-mainFont-1 pt-2">
-              <router-link to="/admin/manage-users" custom v-slot="{ isActive, navigate }">
-                <button @click="navigate"
-                  :class="['btn btn-ghost h-8 flex justify-start border-0 gap-2', isActive ? 'bg-primary text-white' : 'hover:bg-btnHover']">
-                  <UserPen size="16" stroke-width="2" class="relative top-[1px]" />
-                  <span class="mt-1 font-medium">Manage Users</span>
-                </button>
-              </router-link>
-            </li>
-
-            <li class="font-mainFont-1 pt-2">
               <router-link to="/admin/manage-sectors" custom v-slot="{ navigate }">
                 <button @click="navigate"
                   :class="['btn btn-ghost h-8 flex justify-start border-0 gap-2', isSectorsActive ? 'bg-primary text-white' : 'hover:bg-btnHover']">
                   <SquaresExclude size="16" stroke-width="2" class="relative top-[1px]" />
                   <span class="mt-1 font-medium">Manage Sectors</span>
+                </button>
+              </router-link>
+            </li>
+
+            <li class="font-mainFont-1 pt-2">
+              <router-link to="/admin/manage-users" custom v-slot="{ isActive, navigate }">
+                <button @click="navigate"
+                  :class="['btn btn-ghost h-8 flex justify-start border-0 gap-2', isActive ? 'bg-primary text-white' : 'hover:bg-btnHover']">
+                  <UserPen size="16" stroke-width="2" class="relative top-[1px]" />
+                  <span class="mt-1 font-medium">Manage Users</span>
                 </button>
               </router-link>
             </li>

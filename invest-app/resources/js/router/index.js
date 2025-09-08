@@ -30,7 +30,7 @@ const routes = [
         component: AdminLayout,
         meta: { requiresAuth: true, roles: ["admin"] },
         children: [
-            { path: "/admin", redirect: { name: "ManageUsersView" } },
+            { path: "/admin", redirect: { name: "ManageSectorsView" } },
             { path: "manage-users", name: "ManageUsersView", component: ManageUsersView },
             { path: "manage-sectors", name: "ManageSectorsView", component: ManageSectorsView },
             { path: "manage-in-profile", name: "ManageINProfileView", component: ManageINProfileView },
