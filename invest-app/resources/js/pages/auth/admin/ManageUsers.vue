@@ -372,12 +372,12 @@ function openModal() {
                         <select id="role" name="role" class="w-full focus:outline-none" v-model="role" required>
                           <option disabled value="">Select Role</option>
                           <option value="admin"> Admin </option>
-                          <option value="encoder"> Encoder </option>
+                          <option value="agency"> Agency </option>
                         </select>
                       </label>
 
                       <!-- Assigned Sector -->
-                      <label v-if="role === 'encoder'" class="input w-95" for="assigned_sector">
+                      <label v-if="role === 'agency'" class="input w-95" for="assigned_sector">
                         <SquareMousePointer class="size-4" color="#949494" />
                         <select id="assigned_sector" name="assignedSector" class="w-full focus:outline-none" v-model="assignedSector" required>
                           <option disabled value="">Select Sector</option>

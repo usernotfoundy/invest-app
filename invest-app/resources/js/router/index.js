@@ -7,7 +7,7 @@ import EncoderLayout from "@/layouts/EncoderLayout.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import PublicLayout from "@/layouts/PublicLayout.vue";
 
-// Views
+// Admin Views
 import ManageUsersView from "@/pages/auth/admin/ManageUsers.vue";
 import ManageSectorsView from "@/pages/auth/admin/ManageSectors.vue";
 import ManageINProfileView from "@/pages/auth/admin/ManageINProfile.vue";
@@ -15,6 +15,9 @@ import ManageNewsView from "@/pages/auth/admin/ManageNews.vue";
 import ManageFormsView from "@/pages/auth/admin/ManageForms.vue";
 import ShowSector from "@/pages/auth/admin/ShowSector.vue";
 import SectorManageTable from "@/pages/auth/admin/SectorManageTable.vue";
+
+//Encoder
+import EncoderView from "@/pages/auth/encoder/Index.vue";
 
 import Home from "@/pages/public/Home.vue";
 import PriorityIndustries from "@/pages/public/PriorityIndustries.vue";
@@ -38,6 +41,17 @@ const routes = [
         ],
     },
 
+    // Encoder Routes
+    {
+        path: "/encoder",
+        component: EncoderLayout,
+        meta: { requiresAuth: true, roles: ["agency"] },
+        children: [
+            { path: "", name: "EncoderView", component: EncoderView },
+            { path: "admin", redirect: { name: "ManageUsersView" } },
+        ],
+    },
+
     // Public Routes
     {
         path: "/",
@@ -57,15 +71,15 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) return savedPosition;
-    if (to.hash) {
-      return { el: to.hash, top: 0, behavior: "smooth" };
-    }
-    return { top: 0 };
-  },
+    history: createWebHistory(),
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) return savedPosition;
+        if (to.hash) {
+            return { el: to.hash, top: 0, behavior: "smooth" };
+        }
+        return { top: 0 };
+    },
 });
 
 // ✅ Navigation Guard

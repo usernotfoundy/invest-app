@@ -10,7 +10,7 @@ import { FileSpreadsheet, ChevronsUpDownIcon, LockKeyhole, LogOut } from 'lucide
 // --------------------
 const router = useRouter();
 const userStore = useUserStore();
-
+const logout = () => userStore.logout();
 // --------------------
 // Lifecycle Hooks
 // --------------------
@@ -28,24 +28,6 @@ onMounted(() => {
 // --------------------
 // Actions / Handlers
 // --------------------
-async function handleLogout() {
-  try {
-    if (userStore.token) {
-      await axiosClient.post("/logout", {}, {
-        headers: { Authorization: `Bearer ${userStore.token}` },
-      });
-    }
-  } catch (err) {
-    console.error("Logout failed:", err.response || err);
-  } finally {
-    userStore.token = null;
-    userStore.role = null;
-    userStore.user = null;
-    localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
-    router.push("/login");
-  }
-}
 </script>
 
 <template>
@@ -54,7 +36,7 @@ async function handleLogout() {
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content">
         <!-- Page content here -->
-        <div class="m-5 overflow-y-hidden">
+        <div class="p-5 overflow-y-hidden">
           <RouterView />
         </div>
         
@@ -110,7 +92,7 @@ async function handleLogout() {
                 </div>
 
                 <li>
-                  <router-link to="/invest"
+                  <router-link to="#"
                     class="btn btn-ghost flex h-8 justify-start gap-2 border-0 hover:border-0 hover:shadow-sm hover:bg-btnHover">
                     <LockKeyhole size="16" stroke-width="2" class="relative top-[1px]" />
                     <span class="mt-1 font-medium">Change Password</span>
@@ -118,7 +100,7 @@ async function handleLogout() {
                 </li>
 
                 <li>
-                  <button @click="handleLogout"
+                  <button @click="logout"
                     class="btn btn-ghost flex h-8 justify-start gap-2 border-0 hover:border-0 hover:shadow-sm hover:bg-btnHover">
                     <LogOut size="16" stroke-width="2" color="#b91c1c" class="relative top-[1px]" />
                     <span class="mt-1 font-medium text-red-800">Logout</span>

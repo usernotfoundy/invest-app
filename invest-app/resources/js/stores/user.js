@@ -32,19 +32,16 @@ export const useUserStore = defineStore("user", {
       this.loginError = null;
 
       try {
-        // 1. Ensure CSRF cookie is set
+
         await axiosClient.get("/sanctum/csrf-cookie");
 
-        // 2. Perform login
         await axiosClient.post("/login", { email, password });
 
-        // 3. Fetch user profile
         const response = await axiosClient.get("/user/profile");
         this.user = response.data;
 
         console.log("Login successful, user profile fetched:", this.user);
 
-        // 4. Redirect (use imported router, not this.router)
         if (this.user?.role === "admin") {
           router.push("/admin");
         } else if (this.user?.role === "agency") {
@@ -90,7 +87,7 @@ export const useUserStore = defineStore("user", {
       this.createUserError = null;
 
       try {
-        const res = await axiosClient.post("/api/register", {
+        const res = await axiosClient.post("/register", {
           name,
           email,
           password,
@@ -112,10 +109,8 @@ export const useUserStore = defineStore("user", {
 
     async deleteUser(id) {
       try {
-        await axiosClient.delete(`/api/delete-user/${id}`, {
-          headers: { Authorization: `Bearer ${this.token}` },
-        });
-        // Optionally remove the user from usersList here if you want instant UI update
+        await axiosClient.delete(`/delete-user/${id}`);
+        // Optionally remove the user from usersList for instant UI update
         this.usersList = this.usersList.filter((user) => user.id !== id);
         return true;
       } catch (err) {

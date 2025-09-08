@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sector_id');
             $table->string('name');
-            $table->json('data')->nullable()->change();
+            $table->json('data')->nullable();
             $table->json('data_template')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();

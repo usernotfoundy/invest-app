@@ -109,16 +109,21 @@ const handleUpload = async () => {
 
 
 onMounted(async () => {
-  if (!userStore.user) {
-    await userStore.fetchUserProfile()
-  }
+  try {
+    if (!userStore.user) {
+      await userStore.fetchUserProfile()
+    }
 
-  await tableStore.fetchTableByAssignedSector()
+    await tableStore.fetchTableByAssignedSector()
 
-  if (tableStore.children.length > 0) {
-    selectedChildId.value = tableStore.children[0].id;
-  } else {
-    selectedChildId.value = null;
+    if (tableStore.children.length > 0) {
+      selectedChildId.value = tableStore.children[0].id;
+    } else {
+      selectedChildId.value = null;
+    }
+  } catch (error) {
+    console.error("Failed to load data:", error);
+    // The error will be stored in tableStore.errorFetchTable
   }
 })
 
@@ -162,13 +167,13 @@ watch(
         Upload
       </button>
 
-      <button class="btn btn-dash border-slate-500 hover:bg-transparent hover:border-dashed"
+      <button class="btn btn-dash hover:bg-transparent hover:border-dashed"
         :disabled="!selectedChildId" @click="handleDownload(selectedChildId, selectedChildName)">
         <Download :size="16" :stroke-width="2" />
         Template
       </button>
 
-      <button class="btn btn-primary" @click="openInputDataModal()">
+      <button class="btn btn-primary" :disabled="!selectedChildId" @click="openInputDataModal()">
         <Plus :size="16" :stroke-width="2" />
         Input Data
       </button>
@@ -178,7 +183,7 @@ watch(
     <!-- Table -->
     <div v-if="tableStore.loadingFetchTable"
       class="col-span-full py-10 flex flex-col h-full space-y-2 items-center justify-center">
-      <img class="w-24" src="/loading.gif" alt="Loading">
+      <img class="w-24" src="@/assets/loading.gif" alt="Loading">
       <span class="loading loading-spinner loading-xl"></span>
     </div>
 

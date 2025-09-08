@@ -98,9 +98,9 @@ function openModal() {
   <div v-if="sectorStore.loadingFetchSectors" class="flex flex-col h-full items-center justify-center"> <span
       class="loading loading-dots loading-md"></span>Loading</div>
 
-  <div v-if="sectorStore.errorFetchSectors" class="text-red-500">{{ sectorStore.errorFetchSectors }}</div>
+  <div v-else-if="sectorStore.errorFetchSectors" class="text-red-500">{{ sectorStore.errorFetchSectors }}</div>
 
-  <div v-if="sectorStore.sectorsList.length === 0" class=" bg-white mt-5 rounded-lg w-full p-5">
+  <div v-else-if="sectorStore.sectorsList.length === 0" class=" bg-white mt-5 rounded-lg w-full p-5">
     <div class="flex justify-center text-center space-x-2 items-center">
       <CircleAlert size="16" />
       <p>No sectors yet</p>

@@ -3,7 +3,7 @@ import axiosClient from "@/axios";
 import { useUserStore } from "@/stores/user";
 
 export const useTableStore = defineStore("table", {
-  
+
   state: () => ({
     currentInput: "",
     data_template: [],
@@ -36,7 +36,7 @@ export const useTableStore = defineStore("table", {
       this.error = null;
 
       try {
-        const res = await axiosClient.post("/api/create-sector-child", {
+        const res = await axiosClient.post("/create-sector-child", {
           sector_id: sectorId,
           name,
           data: null,
@@ -64,7 +64,7 @@ export const useTableStore = defineStore("table", {
       try {
         if (!id) throw new Error("No table id provided");
 
-        const { data } = await axiosClient.get(`/api/sector-children/${id}`);
+        const { data } = await axiosClient.get(`/sector-children/${id}`);
 
         this.sectorName = data?.sector_name ?? null;
         this.children = data?.children ?? [];
@@ -99,13 +99,8 @@ export const useTableStore = defineStore("table", {
         const assignedSectorId = userStore.user?.assigned_sector;
         if (!assignedSectorId) throw new Error("No assigned sector for user");
 
-        const token = localStorage.getItem("token");
-
         const { data } = await axiosClient.get(
-          `/api/encoder/view-children/${assignedSectorId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          `/encoding/view-children/${assignedSectorId}`
         );
 
         this.sectorName = data?.sector_name ?? null;
@@ -136,7 +131,7 @@ export const useTableStore = defineStore("table", {
       };
 
       try {
-        const res = await axiosClient.post("/api/encoder/data-input", payload);
+        const res = await axiosClient.post("/encoding/data-input", payload);
 
         // Reset form after submit
         Object.keys(childForms[childId]).forEach((field) => {
@@ -155,7 +150,7 @@ export const useTableStore = defineStore("table", {
         const token = localStorage.getItem("token");
 
         const response = await axiosClient.get(
-          `/api/encoder/download-template/${childId}`,
+          `/encoding/download-template/${childId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             responseType: "blob",
@@ -195,7 +190,7 @@ export const useTableStore = defineStore("table", {
         formData.append("child_id", childId);
 
         const response = await axiosClient.post(
-          "/api/encoder/upload-template",
+          "/encoding/upload-template",
           formData,
           {
             headers: {
