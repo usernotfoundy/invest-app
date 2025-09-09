@@ -147,8 +147,8 @@ watch(
 
 <template>
   <div>
-    <h1 class="font-bold text-3xl p-2">Manage Data</h1>
-    <div class="flex flex-row space-x-3">
+    <h1 class="font-bold text-5xl p-2">Manage Data</h1>
+    <div class="flex flex-row space-x-3 pt-5">
 
       <select v-if="tableStore.children.length > 0" v-model="selectedChildId"
         class="select rounded-lg w-auto focus:outline-none focus:ring-0">
@@ -198,7 +198,7 @@ watch(
         <div v-for="child in tableStore.children" :key="child.id" class="mt-5">
           <div v-if="selectedChildId === child.id"
             class="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200"
-            style=" height: calc(100dvh - 150px);"> <!-- dynamic height, adjust 150px for headers/spacing -->
+            style=" height: calc(100dvh - 190px);"> <!-- dynamic height, adjust 150px for headers/spacing -->
 
             <table class="table table-hover table-auto w-full">
               <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 uppercase">

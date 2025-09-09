@@ -1,57 +1,118 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 import { useSectorStore } from '@/stores/sector.js'
 import { PlusCircle, X, ALargeSmall, CheckCircle, Nut, CircleAlert } from 'lucide-vue-next'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle, Menu } from '@headlessui/vue'
 
-const sectorStore = useSectorStore();
-const name = ref("");
-const description = ref("");
+// Store and reactive state
+const sectorStore = useSectorStore()
+const isOpen = ref(false)
+const name = ref('')
+const description = ref('')
 const showSuccess = ref(false)
-const loadingCreateSector = ref(false);
-const errorCreateSector = ref(null);
+const loadingCreateSector = ref(false)
+const errorCreateSector = ref(null)
 
-onMounted(() => {
-  sectorStore.fetchSectors();
-});
+// Computed properties
+const isFormValid = computed(() =>
+  name.value.trim().length > 0 && description.value.trim().length > 0
+)
+
+const submitButtonText = computed(() =>
+  loadingCreateSector.value ? 'Creating...' : 'Create Sector'
+)
+
+// Auto-hide success message
+let successTimeout = null
+const showSuccessMessage = (duration = 5000) => {
+  showSuccess.value = true
+
+  // Clear existing timeout
+  if (successTimeout) {
+    clearTimeout(successTimeout)
+  }
+
+  successTimeout = setTimeout(() => {
+    showSuccess.value = false
+    successTimeout = null
+  }, duration)
+}
+
+// Form handlers
+const resetForm = () => {
+  name.value = ''
+  description.value = ''
+  errorCreateSector.value = null
+}
+
+const closeModal = () => {
+  isOpen.value = false
+  resetForm()
+}
+
+const openModal = () => {
+  isOpen.value = true
+  resetForm()
+
+  // Focus on name input after modal opens
+  nextTick(() => {
+    const nameInput = document.querySelector('input[name="name"]')
+    nameInput?.focus()
+  })
+}
 
 const submit = async () => {
-  loadingCreateSector.value = true;
-  errorCreateSector.value = null;
+  if (!isFormValid.value) return
+
+  loadingCreateSector.value = true
+  errorCreateSector.value = null
 
   try {
     await sectorStore.createSector({
-      name: name.value,
-      description: description.value,
-    });
+      name: name.value.trim(),
+      description: description.value.trim(),
+    })
 
-    closeModal();
-    showSuccess.value = true;
-    setTimeout(() => {
-      showSuccess.value = false;
-    }, 5000);
+    closeModal()
+    showSuccessMessage()
 
-    await sectorStore.fetchSectors();
+    // Optimistically update - only fetch if create was successful
+    await sectorStore.fetchSectors()
   } catch (error) {
-    console.error(error);
-    errorCreateSector.value = error.message;
+    console.error('Failed to create sector:', error)
+    errorCreateSector.value = error?.message || 'Failed to create sector. Please try again.'
   } finally {
-    loadingCreateSector.value = false;
+    loadingCreateSector.value = false
   }
-};
-
-
-const isOpen = ref(false)
-
-function closeModal() {
-  isOpen.value = false;
-  name.value = "";
-  description.value = "";
 }
 
-function openModal() {
-  isOpen.value = true
+// Handle form submission via Enter key
+const handleKeydown = (event) => {
+  if (event.key === 'Enter' && !event.shiftKey && isFormValid.value) {
+    event.preventDefault()
+    submit()
+  }
 }
+
+// Lifecycle
+onMounted(async () => {
+  try {
+    await sectorStore.fetchSectors()
+  } catch (error) {
+    console.error('Failed to fetch sectors:', error)
+  }
+})
+
+// Cleanup on unmount
+const cleanup = () => {
+  if (successTimeout) {
+    clearTimeout(successTimeout)
+  }
+}
+
+// Vue 3 way to handle cleanup
+import { onBeforeUnmount } from 'vue'
+onBeforeUnmount(cleanup)
 </script>
 
 <template>

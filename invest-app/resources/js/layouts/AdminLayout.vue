@@ -36,6 +36,10 @@ function clearAllCookies() {
   }
 }
 
+const userInitial = computed(() => {
+  return userStore.user?.name?.[0]?.toUpperCase() || ''
+})
+
 // --------------------
 // Actions / Handlers
 // --------------------
@@ -145,14 +149,14 @@ const isSectorsActive = computed(() =>
             <div v-else-if="userStore.user" class="dropdown dropdown-top dropdown-center w-full">
               <div tabindex="0" role="button"
                 class="btn bg-transparent w-full border-0.5 p-6 px-2 hover:bg-btnHover rounded-lg flex items-center gap-3 mt-2">
-                <img class="w-9 h-9 rounded-lg object-cover" src="@/assets/invest.svg" alt="User Image" />
+                <div class="flex items-center justify-center bg-brandSky-3 text-lg w-9 h-9 rounded-lg object-cover">{{ userInitial }}</div>
                 <p class="font-medium text-xs">{{ userStore.user.name }}</p>
                 <ChevronsUpDownIcon size="16" stroke-width="2" class="ml-auto" />
               </div>
 
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-lg z-1 w-full p-2 shadow-sm space-y-2 border border-slate-100">
                 <div class="flex items-center gap-3">
-                  <img class="w-9 h-9 rounded-lg object-cover" src="@/assets/invest.svg" alt="User Image" />
+                  <div class="flex items-center justify-center bg-brandSky-3 text-lg w-9 h-9 rounded-lg object-cover">{{ userInitial }}</div>
                   <div class="flex flex-col leading-tight">
                     <p class="font-medium text-xs">{{ userStore.user.name }}</p>
                     <span class="text-xs text-gray-500 capitalize">{{ userStore.user.role }}</span>

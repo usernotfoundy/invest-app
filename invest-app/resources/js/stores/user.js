@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import axiosClient from "../axios.js"; // Your axios instance
-import router from "../router"; // Import router if you want redirection inside store
+import axiosClient from "../axios.js";
+import router from "../router";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -19,10 +19,14 @@ export const useUserStore = defineStore("user", {
     fetchUserProfileError: null,
     createUserError: null,
     usersList: [],
+
+    // caching timestamps
+    lastFetchedUsers: null,
+    lastFetchedProfile: null,
   }),
 
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => !!state.user,
     userCount: (state) => state.usersList.length,
   },
 
@@ -32,16 +36,25 @@ export const useUserStore = defineStore("user", {
       this.loginError = null;
 
       try {
-
         await axiosClient.get("/sanctum/csrf-cookie");
 
         await axiosClient.post("/login", { email, password });
 
         const response = await axiosClient.get("/user/profile");
         this.user = response.data;
+        this.lastFetchedProfile = Date.now();
 
-        console.log("Login successful, user profile fetched:", this.user);
+        sessionStorage.setItem(
+          "profileCache",
+          JSON.stringify({
+            user: this.user,
+            lastFetched: this.lastFetchedProfile,
+          })
+        );
 
+        console.log("✅ Login successful, user profile fetched:", this.user);
+
+        // 4. Redirect by role
         if (this.user?.role === "admin") {
           router.push("/admin");
         } else if (this.user?.role === "agency") {
@@ -50,7 +63,7 @@ export const useUserStore = defineStore("user", {
           router.push("/");
         }
       } catch (err) {
-        console.error("Login error:", err);
+        console.error("❌ Login error:", err);
 
         if (err.response?.status === 422) {
           this.loginError = "Validation failed. Please check your inputs.";
@@ -70,13 +83,19 @@ export const useUserStore = defineStore("user", {
       try {
         await axiosClient.post("/logout", {}, { withCredentials: true });
 
-        // Clear user from store
         this.user = null;
+        this.usersList = [];
+        this.lastFetchedUsers = null;
+        this.lastFetchedProfile = null;
 
-        // Redirect to login
+        sessionStorage.clear();
+
+        // Clear localStorage too if something is cached there
+        // localStorage.clear();
+
         router.push({ name: "LoginView" });
 
-        console.log("Logged out successfully");
+        console.log("Logged out successfully, all cache cleared");
       } catch (err) {
         console.error("Logout error:", err.response || err);
       }
@@ -95,10 +114,12 @@ export const useUserStore = defineStore("user", {
           role,
         });
 
+        // force refresh user list after creating a user
+        await this.fetchUsers(true);
+
         return res.data;
       } catch (err) {
         if (err.response?.status === 422) {
-          // Laravel validation errors
           this.createUserError = err.response.data.errors;
         } else {
           this.createUserError = { general: ["Something went wrong."] };
@@ -110,7 +131,6 @@ export const useUserStore = defineStore("user", {
     async deleteUser(id) {
       try {
         await axiosClient.delete(`/delete-user/${id}`);
-        // Optionally remove the user from usersList for instant UI update
         this.usersList = this.usersList.filter((user) => user.id !== id);
         return true;
       } catch (err) {
@@ -119,16 +139,28 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async fetchUsers() {
-      this.loadingFetchUsers = true;
+    async fetchUsers(force = false) {
       this.fetchUsersError = null;
+
+      const cacheDuration = 5 * 60 * 1000; // 5 minutes
+      const now = Date.now();
+
+      if (
+        !force &&
+        this.usersList.length > 0 &&
+        this.lastFetchedUsers &&
+        now - this.lastFetchedUsers < cacheDuration
+      ) {
+        return this.usersList;
+      }
+
+      this.loadingFetchUsers = true;
 
       try {
         const response = await axiosClient.get("/get-users", {
-          withCredentials: true, // since you’re using Sanctum
+          withCredentials: true,
         });
 
-        // ✅ Make sure response.data is an array
         if (Array.isArray(response.data)) {
           this.usersList = response.data.map((user) => ({
             id: user.id,
@@ -137,10 +169,13 @@ export const useUserStore = defineStore("user", {
             role: user.role || "No role",
             assigned_sector: user.assigned_sector || "Unassigned",
           }));
+          this.lastFetchedUsers = now;
         } else {
           console.error("Unexpected response:", response.data);
           this.fetchUsersError = "Invalid server response.";
         }
+
+        return this.usersList;
       } catch (err) {
         console.error("Failed to fetch users:", err.response || err);
         this.fetchUsersError =
@@ -150,26 +185,50 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-
-    async fetchUserProfile() {
-      this.loadingFetchUserProfile = true;
+    async fetchUserProfile(force = false) {
       this.fetchUserProfileError = null;
 
+      const cacheDuration = 5 * 60 * 1000; // 5 minutes
+      const now = Date.now();
+
+      // ✅ Check sessionStorage for cached profile
+      const cached = sessionStorage.getItem("profileCache");
+      if (cached) {
+        const { user, lastFetched } = JSON.parse(cached);
+
+        if (!force && user && lastFetched && now - lastFetched < cacheDuration) {
+          this.user = user;
+          this.lastFetchedProfile = lastFetched;
+          return this.user;
+        }
+      }
+
+      this.loadingFetchUserProfile = true;
+
       try {
-        // Sanctum automatically authenticates via session cookie
         const response = await axiosClient.get("/user/profile");
 
-        // Store user data in Pinia
         this.user = response.data;
+        this.lastFetchedProfile = now;
 
+        // ✅ Save to sessionStorage
+        sessionStorage.setItem(
+          "profileCache",
+          JSON.stringify({
+            user: this.user,
+            lastFetched: this.lastFetchedProfile,
+          })
+        );
+
+        return this.user;
       } catch (err) {
         console.error("Fetch user profile error:", err.response || err);
 
         if (err.response && err.response.status === 401) {
           this.fetchUserProfileError = "Unauthorized. Please login again.";
           this.user = null;
+          sessionStorage.removeItem("profileCache"); // ❌ clear stale cache
 
-          // Redirect to login
           if (router.currentRoute.value.name !== "Login") {
             router.push({ name: "Login" });
           }
