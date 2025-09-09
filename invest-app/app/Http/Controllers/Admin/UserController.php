@@ -14,7 +14,7 @@ class UserController extends Controller
         //     $users = User::all();
         //     return response()->json($users);
 
-        $users = User::select('id', 'name', 'email', 'assigned_sector')
+        $users = User::select('id', 'name', 'email', 'assigned_sector', 'email_verified_at')
             ->with([
                 'roles:name',
                 'sector:id,name' // load sector with only id and name

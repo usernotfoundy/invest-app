@@ -47,7 +47,12 @@ php artisan migrate
 php artisan db:seed
 php artisan key:generate
 php artisan storage:link
+```
+#### Run (Optional - if neededed only)
+Check directory [./resources/views/vendor]
+```bash
 php artisan vendor:publish --tag=laravel-mail
+php artisan vendor:publish --tag=laravel-notifications
 ```
 #### Create required directory
 ```bash
