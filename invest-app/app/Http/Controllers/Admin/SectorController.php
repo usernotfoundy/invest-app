@@ -35,7 +35,8 @@ class SectorController extends Controller
 
     public function index()
     {
-        $sectors = Sector::all();
+        // $sectors = Sector::all();
+        $sectors = Sector::select('id', 'name')->get();
         return response()->json($sectors);
     }
 
