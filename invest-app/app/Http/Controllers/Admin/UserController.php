@@ -86,7 +86,8 @@ class UserController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'assigned_sector' => $user->sector?->id, // Assuming sector relationship exists
-            'role' => $user->getRoleNames()->first() // returns a collection of role names
+            'role' => $user->getRoleNames()->first(), // returns a collection of role names
+            'email_verified_at' => $user->email_verified_at
         ]);
     }
 
