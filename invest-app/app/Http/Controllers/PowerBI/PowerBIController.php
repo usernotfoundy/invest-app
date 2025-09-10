@@ -29,4 +29,12 @@ class PowerBIController extends Controller
 
         return response()->json($sectorChild->data);
     }
+
+    public function data($childId)
+    {
+        $data = ChildSectorTable::where('id', $childId)
+            ->firstOrFail();
+
+        return response()->json($data->data);
+    }
 }
