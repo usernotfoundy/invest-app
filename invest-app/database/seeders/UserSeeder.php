@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
                 'name' => 'admin',
                 'password' => Hash::make('password1234'),
                 'assigned_sector' => null,
+                'email_verified_at' => '2025-09-09T05:58:44.000000Z'
             ]
         );
 
