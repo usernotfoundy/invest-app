@@ -22,6 +22,7 @@ import EncoderView from "@/pages/auth/encoder/Index.vue";
 import Home from "@/pages/public/Home.vue";
 import PriorityIndustries from "@/pages/public/PriorityIndustries.vue";
 import LoginView from "@/pages/public/Login.vue";
+import EmailVerifiedView from "@/pages/public/EmailVerified.vue";
 
 const routes = [
     // Admin Routes
@@ -59,6 +60,7 @@ const routes = [
         children: [
             { path: "", name: "Home", component: Home },
             { path: "priority-industries", name: "PriorityIndustries", component: PriorityIndustries },
+            
         ],
     },
 
@@ -66,8 +68,17 @@ const routes = [
     {
         path: "/login",
         component: LoginLayout,
-        children: [{ path: "", name: "LoginView", component: LoginView }],
+        children: [
+            { path: "", name: "LoginView", component: LoginView },
+        ],
     },
+
+    //Email Verified
+    {
+        path: "/email-verified",
+        name: "EmailVerified",
+        component: EmailVerifiedView
+    }
 ];
 
 const router = createRouter({
