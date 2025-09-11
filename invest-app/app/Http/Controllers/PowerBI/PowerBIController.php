@@ -32,7 +32,7 @@ class PowerBIController extends Controller
 
     public function data($childId)
     {
-        $data = ChildSectorTable::where('id', $childId)
+        $data = ChildSector::where('id', $childId)
             ->firstOrFail();
 
         return response()->json($data->data);

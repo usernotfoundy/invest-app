@@ -93,11 +93,11 @@ class UserController extends Controller
 
     public function getUserCount()
     {
-        $encoderCount = User::role('encoder')->count();
+        $agencyCount = User::role('agency')->count();
         $adminCount = User::role('admin')->count();
 
         return response()->json([
-            'encoder' => $encoderCount,
+            'agency' => $agencyCount,
             'admin' => $adminCount,
             // 'total' => $encoderCount + $adminCount,
         ]);

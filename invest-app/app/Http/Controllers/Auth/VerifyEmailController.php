@@ -42,7 +42,7 @@ class VerifyEmailController extends Controller
 
         // If already verified, just redirect
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.app_url').'/login?verified=1');
+            return redirect(config('app.app_url').'/email-verified');
         }
 
         // Mark email as verified
@@ -50,6 +50,6 @@ class VerifyEmailController extends Controller
         event(new Verified($user));
 
         // Redirect to frontend change-password page
-        return redirect(config('app.app_url').'/login?verified=1');
+        return redirect(config('app.app_url').'/email-verified');
     }
 }
