@@ -9,5 +9,7 @@ Route::middleware('guest')->group(
     function () {
         Route::get('/public/get-sectors', [WebsiteController::class, 'index'])
             ->name('get-sectors');
+        Route::get('/psgc/ilocos-data', [WebsiteController::class, 'getIlocosData'])
+            ->name('psgc.ilocos.data');
     }
 );
