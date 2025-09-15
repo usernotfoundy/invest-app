@@ -42,7 +42,7 @@ class SectorController extends Controller
 
     public function show($id)
     {
-        $sector = Sector::findOrFail($id);
+        $sector = Sector::with('children')->findOrFail($id);
         return response()->json($sector);
     }
 

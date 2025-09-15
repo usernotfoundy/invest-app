@@ -14,6 +14,13 @@ class ChildSector extends Model
         'file_path',
     ];
 
+    protected $appends = ['api_url'];
+
+    public function getApiUrlAttribute()
+    {
+        return config('app.url') . '/api/get-data/' . $this->id;
+    }
+
     protected $casts = [
         'data' => 'array',
         'data_template' => 'array',
