@@ -1,8 +1,56 @@
 <script setup>
-import DrySeason from '@/assets/images/dry-season.webp'
-import WetSeason from '@/assets/images/wet-season.webp'
-import Climate from '@/assets/images/climate.webp'
-import INMap from '@/assets/images/in-map.webp'
+
+import { ref, onMounted } from 'vue'
+import { ZoomImg } from "vue3-zoomer";
+import { ArrowRightLeft } from 'lucide-vue-next';
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+// import DrySeason from '@/assets/images/dry-season.webp'
+// import WetSeason from '@/assets/images/wet-season.webp'
+// import Climate from '@/assets/images/climate.webp'
+// import INMap from '@/assets/images/in-map.webp'
+
+const FloodMap2019 = "/assets/images/maps/flood_map_2019.png"
+const MunicipalModal = ref(false);
+const municipalities = ref([]);
+const hazardMaps = ref([]);
+
+const selectedMunicipality = ref(null)
+const selectedMap = ref(null)
+
+function openMunicipalModal() {
+  MunicipalModal.value = true;
+}
+
+const selectMunicipality = (municipality, closeFn) => {
+  selectedMunicipality.value = municipality;
+  closeFn()
+}
+
+onMounted(async () => {
+  try {
+    // Fetch municipalities
+    const res1 = await fetch("/municipalities.json")
+    municipalities.value = await res1.json()
+
+    // Default select Laoag City
+    selectedMunicipality.value = municipalities.value.find(
+      (m) => m.name.toLowerCase() === "laoag city"
+    )
+
+    // Fetch hazard maps
+    const res2 = await fetch("/maps.json")
+    hazardMaps.value = await res2.json()
+
+    // ✅ Default select the Flood map
+    selectedMap.value =
+      hazardMaps.value.find((m) =>
+        m.name.toLowerCase().includes("flood")
+      ) || hazardMaps.value[0] // fallback to first if not found
+  } catch (err) {
+    console.error("Failed to load data:", err)
+  }
+})
+
 </script>
 
 <template>
@@ -10,17 +58,99 @@ import INMap from '@/assets/images/in-map.webp'
   <div
     class="w-auto bg-[url('@/assets/images/header.png')] bg-cover bg-center flex flex-col items-center justify-center py-5"
     style="min-height: 150px; margin-left: calc(50% - 50vw);">
-    <img src="@/assets/images/in-logo.webp" class="w-24 lg:w-36" alt="Ilocos Norte Seal" />
-    <h1 class="font-leagueSpartan text-5xl pt-4 lg:text-8xl font-extrabold text-shadow-lg uppercase text-white">
+    <img src="@/assets/images/in-logo.webp" class="w-24 lg:w-24" alt="Ilocos Norte Seal" />
+    <h1 class="font-leagueSpartan text-5xl pt-4 lg:text-7xl font-extrabold text-shadow-lg uppercase text-white">
       Ilocos Norte
     </h1>
   </div>
 
   <div class="p-5 md:px-14 lg:px-24 xl:px-36 min-h-screen">
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:grid-rows-[auto]">
+    <div class="grid grid-cols-4 gap-2 lg:grid-rows-[auto]">
 
       <!-- Row 1: Capital, Land Area, Coastline -->
       <div
+        class="relative col-span-4 sm:col-span-1 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col items-center p-10 justify-center transition">
+        <!-- Rotating Arrow Button -->
+        <!-- <button @click="openMunicipalModal"
+          class="absolute top-4 right-4 p-2 bg-brandSky-5 text-white rounded-full shadow hover:bg-brandSky-3 transition-transform transform hover:rotate-90">
+          <ArrowRightLeft Right class="w-3 h-3" />
+        </button> -->
+        <Popover v-slot="{ open, close }">
+          <PopoverButton :class="open ? 'text-white' : 'text-white/90'"
+            class="absolute top-4 right-4 p-2 bg-brandSky-5 text-white rounded-full shadow hover:bg-brandSky-6 transition-transform transform outline-none">
+            <ArrowRightLeft Right class="w-3 h-3" />
+          </PopoverButton>
+
+          <transition enter-active-class="transition duration-200 ease-out" enter-from-class="translate-y-1 opacity-0"
+            enter-to-class="translate-y-0 opacity-100" leave-active-class="transition duration-150 ease-in"
+            leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-1 opacity-0">
+            <PopoverPanel
+              class="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
+              <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
+                <div class="relative grid gap-8 bg-white p-7 h-72 overflow-y-auto">
+
+                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                    <div v-for="(municipality, index) in municipalities" :key="index"
+                      @click="selectMunicipality(municipality, close)"
+                      class="flex flex-col justify-center items-center p-2 rounded-lg transition">
+                      <img class="w-12 mb-2" :src="municipality.seal" :alt="municipality.name + ' Seal'" />
+                      <p class="text-gray-800 font-medium">{{ municipality.name }}</p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </PopoverPanel>
+          </transition>
+        </Popover>
+
+        <!-- Card Content -->
+        <img :src="selectedMunicipality ? selectedMunicipality.seal : ''"
+          :alt="selectedMunicipality ? selectedMunicipality.name + ' Seal' : 'No Seal'" class="w-16 mb-3" />
+        <h1 class="text-3xl font-bold text-sky-800 leading-5 uppercase">{{ selectedMunicipality ?
+          selectedMunicipality.name : '-' }}</h1>
+        <h2 class="text-lg lg:text-2xl text-gray-700 mt-1 leading-tight"> {{ selectedMunicipality ?
+          selectedMunicipality.type : '-' }} </h2>
+      </div>
+
+      <div
+        class="col-span-2 sm:col-span-2 lg:col-span-1 rounded-lg bg-slate-100 flex flex-col items-center p-10 justify-center">
+        <h1 class="text-3xl lg:text-5xl font-extrabold text-sky-800">
+          {{ selectedMunicipality ? selectedMunicipality.district : '-' }}
+        </h1>
+        <h2 class="text-lg lg:text-xl text-gray-700 mb-1 uppercase leading-tight">District</h2>
+      </div>
+
+      <div
+        class="col-span-2 sm:col-span-2 lg:col-span-1 rounded-lg bg-slate-100 flex flex-col items-center p-10 justify-center">
+        <h1 class="text-3xl lg:text-5xl font-extrabold text-sky-800">
+          {{ selectedMunicipality ? selectedMunicipality.barangays : '-' }}
+        </h1>
+        <h2 class="text-lg lg:text-xl text-gray-700 mb-1 uppercase leading-tight">Barangays</h2>
+      </div>
+
+      <!-- Selectors -->
+      <!-- <div class="hidden col-span-2 sm:col-span-2 lg:col-span-2 rounded-lg bg-slate-100 lg:flex flex-col p-10">
+        <h1>Selectors</h1>
+      </div> -->
+
+      <div class="col-span-4 sm:col-span-1 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col p-2">
+
+        <!-- Dropdown Selector -->
+        <select v-model="selectedMap" class="select select-bordered select-sm w-full mb-2 bg-white text-gray-800">
+          <option v-for="(map, index) in hazardMaps" :key="index" :value="map"
+            class="bg-white text-gray-800 hover:bg-slate-100">
+            {{ map.name }}
+          </option>
+        </select>
+
+        <!-- Map Viewer -->
+        <ZoomImg v-if="selectedMap" :src="selectedMap.file" :alt="selectedMap.name" zoom-type="move" :step="2"
+          :show-zoom-btns="true" trigger="click" :zoom-scale="10" />
+      </div>
+
+      <!-- Row 1: Capital, Land Area, Coastline -->
+      <!-- <div
         class="col-span-1 sm:col-span-4 lg:col-span-4 rounded-lg bg-white inner-shadow flex flex-col items-center p-10 justify-center">
         <img src="@/assets/images/laoag-city.webp" alt="Capital Icon" class="w-16 mb-3" />
         <h1 class="text-3xl font-bold text-sky-800 leading-5">LAOAG CITY</h1>
@@ -41,10 +171,10 @@ import INMap from '@/assets/images/in-map.webp'
         <h1 class="text-3xl lg:text-5xl font-extrabold text-sky-800">
           155.37 <span class="text-base">kms.</span>
         </h1>
-      </div>
+      </div> -->
 
       <!-- Row 2: Demography and Languages side by side -->
-      <div class="col-span-1 sm:col-span-4 lg:col-span-6 bg-white rounded-lg inner-shadow p-6 flex flex-col">
+      <!-- <div class="col-span-1 sm:col-span-4 lg:col-span-6 bg-white rounded-lg inner-shadow p-6 flex flex-col">
         <h1 class="text-3xl font-extrabold text-sky-800 text-center uppercase mb-4">Demography</h1>
         <div class="flex flex-col sm:flex-row sm:justify-between gap-6">
           <p class="text-sm sm:text-base">
@@ -86,10 +216,10 @@ import INMap from '@/assets/images/in-map.webp'
           <span class=" text-md font-medium">Hello!</span>
           <span class="italic text-sm">hə-ˈlō</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- Row 3: Dry Season, Wet Season, Climate -->
-      <div
+      <!-- <div
         class="col-span-1 sm:col-span-4 lg:col-span-4 relative rounded-lg overflow-hidden inner-shadow flex flex-col justify-center bg-white p-6">
         <div :style="`background-image: url(${DrySeason})`" class="absolute inset-0 bg-center bg-cover opacity-30">
         </div>
@@ -121,10 +251,10 @@ import INMap from '@/assets/images/in-map.webp'
           <h2 class="font-bold text-sky-800 text-5xl">23°C - 30°C</h2>
           <p class="text-xs md:text-md mt-1">AVERAGE TEMPERATURE</p>
         </div>
-      </div>
+      </div> -->
 
       <!-- Row 4: 4 stats (2x2 grid) -->
-      <div class="col-span-1 sm:col-span-4 lg:col-span-4 grid grid-cols-2 gap-4">
+      <!-- <div class="col-span-1 sm:col-span-4 lg:col-span-4 grid grid-cols-2 gap-4">
         <div class="bg-white rounded-lg inner-shadow flex flex-col items-center justify-center p-6">
           <h1 class="text-4xl font-bold text-sky-800">2</h1>
           <p class="text-xs text-center mt-1 uppercase">CONGRESSIONAL DISTRICTS</p>
@@ -141,10 +271,10 @@ import INMap from '@/assets/images/in-map.webp'
           <h1 class="text-4xl font-bold text-sky-800">559</h1>
           <p class="text-xs text-center mt-1 uppercase">BARANGAYS</p>
         </div>
-      </div>
+      </div> -->
 
       <!-- Row 5: Economic Indicators and Map -->
-      <div
+      <!-- <div
         class="col-span-1 sm:col-span-4 lg:col-span-4 bg-white rounded-lg inner-shadow p-6 flex flex-col justify-center">
         <h2 class="text-xl font-bold text-sky-800 mb-4">ECONOMIC INDICATORS</h2>
         <p class="text-xs mb-4 leading-relaxed">
@@ -157,16 +287,16 @@ import INMap from '@/assets/images/in-map.webp'
           Income: Php 334,980<br />
           Expenditure: 215,770
         </p>
-      </div>
+      </div> -->
 
       <!-- Map -->
-      <div
+      <!-- <div
         class="col-span-1 sm:col-span-4 lg:col-span-4 lg:row-span-2 bg-white rounded-lg inner-shadow flex items-center justify-center p-6">
         <img :src="INMap" alt="Ilocos Norte Map" class="w-full max-w-3xl object-contain" />
-      </div>
+      </div> -->
 
       <!-- Forms -->
-      <div
+      <!-- <div
         class="col-span-1 sm:col-span-4 lg:col-span-8 bg-white rounded-lg inner-shadow p-6 flex flex-col justify-center">
         <h1 class="text-2xl font-bold mb-4">Forms</h1>
         <ul class="space-y-3">
@@ -189,8 +319,9 @@ import INMap from '@/assets/images/in-map.webp'
             </a>
           </li>
         </ul>
-      </div>
+      </div> -->
 
     </div>
+
   </div>
 </template>

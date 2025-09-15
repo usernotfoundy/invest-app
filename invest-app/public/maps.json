@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Flood Susceptibility (2019)",
+    "file": "/assets/images/maps/flood_map_2019.png",
+    "year": 2019,
+    "type": "Flood"
+  },
+  {
+    "name": "Ground Shaking (2023)",
+    "file": "/assets/images/maps/ground_shaking_map_2023.png",
+    "year": 2023,
+    "type": "Seismic"
+  },
+  {
+    "name": "Liquefaction (2023)",
+    "file": "/assets/images/maps/liqufaction_map_2023.png",
+    "year": 2023,
+    "type": "Seismic"
+  },
+  {
+    "name": "Rain-Induced Landslide (2023)",
+    "file": "/assets/images/maps/ril_map1_2023.png",
+    "year": 2023,
+    "type": "Landslide"
+  },
+  {
+    "name": "Storm Surge (2023)",
+    "file": "/assets/images/maps/storm_surge_map_2023.png",
+    "year": 2023,
+    "type": "Hydro-Meteorological"
+  },
+  {
+    "name": "Tsunami (2023)",
+    "file": "/assets/images/maps/tsunami_map_2023.png",
+    "year": 2023,
+    "type": "Tsunami"
+  }
+]

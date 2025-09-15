@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Laoag City",
+    "type": "Capital",
+    "seal": "/assets/images/seals/laoag.png",
+    "district": "1st",
+    "barangays": 80
+  },
+  {
+    "name": "Batac City",
+    "type": "City",
+    "seal": "/assets/images/seals/batac.png",
+    "district": "2nd",
+    "barangays": 43
+  },
+  {
+    "name": "Adams",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/adams.png",
+    "district": "1st",
+    "barangays": 1
+  },
+  {
+    "name": "Bacarra",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/bacarra.png",
+    "district": "1st",
+    "barangays": 43
+  },
+  {
+    "name": "Badoc",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/badoc.png",
+    "district": "2nd",
+    "barangays": 31
+  },
+  {
+    "name": "Bangui",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/bangui.png",
+    "district": "1st",
+    "barangays": 15
+  },
+  {
+    "name": "Banna",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/banna.png",
+    "district": "2nd",
+    "barangays": 20
+  },
+  {
+    "name": "Burgos",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/burgos.png",
+    "district": "1st",
+    "barangays": 11
+  },
+  {
+    "name": "Carasi",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/carasi.png",
+    "district": "1st",
+    "barangays": 3
+  },
+  {
+    "name": "Currimao",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/currimao.png",
+    "district": "2nd",
+    "barangays": 23
+  },
+  {
+    "name": "Dingras",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/dingras.png",
+    "district": "2nd",
+    "barangays": 31
+  },
+  {
+    "name": "Dumalneg",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/dumalneg.png",
+    "district": "1st",
+    "barangays": 1
+  },
+  {
+    "name": "Marcos",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/marcos.png",
+    "district": "2nd",
+    "barangays": 13
+  },
+  {
+    "name": "Nueva Era",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/nuevaera.png",
+    "district": "2nd",
+    "barangays": 11
+  },
+  {
+    "name": "Pagudpud",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/pagudpud.png",
+    "district": "1st",
+    "barangays": 16
+  },
+  {
+    "name": "Paoay",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/paoay.png",
+    "district": "2nd",
+    "barangays": 31
+  },
+  {
+    "name": "Pasuquin",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/pasuquin.png",
+    "district": "1st",
+    "barangays": 33
+  },
+  {
+    "name": "Piddig",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/piddig.png",
+    "district": "1st",
+    "barangays": 23
+  },
+  {
+    "name": "Pinili",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/pinili.png",
+    "district": "2nd",
+    "barangays": 25
+  },
+  {
+    "name": "San Nicolas",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/sannicolas.png",
+    "district": "2nd",
+    "barangays": 24
+  },
+  {
+    "name": "Sarrat",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/sarrat.png",
+    "district": "1st",
+    "barangays": 24
+  },
+  {
+    "name": "Solsona",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/solsona.png",
+    "district": "2nd",
+    "barangays": 22
+  },
+  {
+    "name": "Vintar",
+    "type": "Municipality",
+    "seal": "/assets/images/seals/vintar.png",
+    "district": "1st",
+    "barangays": 33
+  }
+]
