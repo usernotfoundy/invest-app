@@ -18,6 +18,7 @@ const description = ref("");
 const showSuccessUpdate = ref(false);
 const loadingUpdateSector = ref(false);
 const errorUpdateSector = ref(null);
+const copied = ref(false);
 
 const goPreviousPage = () => {
   router.back()
@@ -31,6 +32,14 @@ function closeModal() {
   updateModal.value = false;
   name.value = "";
   description.value = "";
+}
+
+function copyCode() {
+  const code = document.getElementById("installCmd").innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    copied.value = true;
+    setTimeout(() => (copied.value = false), 1500);
+  });
 }
 
 onMounted(async () => {
@@ -101,13 +110,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="py-5">
-    <button @click="goPreviousPage"
-      class="flex transition-transform duration-200 hover:scale-105 items-center space-y-3 p-2 cursor-pointer">
-      <ArrowLeft size="16" class="mr-5" />
-      Back
-    </button>
-  </div>
+
 
 
   <!-- Loading -->
@@ -122,16 +125,54 @@ const submit = async () => {
 
   <!-- Main Content -->
   <div v-else-if="sectorStore.sector">
-    <div class="h-24 tool flex items-center space-x-5">
-      <h1 class="text-4xl font-bold">{{ sectorStore.sector.name }}</h1>
-      <div class="items-center justify-center tooltip tooltip-primary" data-tip="Update Sector">
-        <button class="btn btn-sm rounded-full btn-primary" @click="openModal">
-          <Pencil size="16" />
+
+    <div class="grid grid-cols-2 h-36">
+      <!-- Left side -->
+      <div class="h-24 tool items-center space-x-5 py-5">
+        <button @click="goPreviousPage"
+          class="flex transition-transform duration-200 hover:scale-105 items-center space-y-3 p-2 cursor-pointer">
+          <ArrowLeft size="16" class="mr-5" />
+          Back
         </button>
+        <div class="flex items-center space-x-5">
+          <h1 class="text-4xl font-bold">{{ sectorStore.sector.name }}</h1>
+          <div class="items-center justify-center tooltip tooltip-primary" data-tip="Update Sector">
+            <button class="btn btn-sm rounded-full btn-primary" @click="openModal">
+              <Pencil size="16" />
+            </button>
+          </div>
+        </div>
       </div>
+
+      <!-- Right side: Code Mockup -->
+      <div class="flex justify-end">
+        <div class="relative font-mono text-sm text-slate-800 w-fit max-w-xl">
+          <!-- Code -->
+          <div class="space-y-4 p-5 rounded-lg bg-white">
+            <div class="flex flex-col">
+              <span class="text-slate-500">Get data URL</span>
+              <code id="copyGetData">http://localhost:8000/api/get-data/1</code>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-slate-500">Power BI URL</span>
+              <code id="copyPowerBI">http://localhost:8000/api/get-data/1</code>
+            </div>
+          </div>
+
+          <!-- Copy Button -->
+          <!--
+    <button @click="copyCode"
+      class="absolute top-2 right-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-3 py-1 rounded-md transition">
+      {{ copied ? 'Copied!' : 'Copy Get Data' }}
+    </button>
+    -->
+        </div>
+      </div>
+
+
     </div>
 
-    <div class="space-y-3">
+    <div class="space-y-3 pt-3">
 
       <div class="flex w-full">
         <!-- Dropdown to choose child -->
@@ -171,7 +212,7 @@ const submit = async () => {
           <div v-for="child in tableStore.children" :key="child.id" class="mt-5">
             <div v-if="selectedChildId === child.id"
               class="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200"
-              style="max-height: calc(100dvh - 260px);">
+              style="max-height: calc(100dvh - 250px);">
 
               <table class="table table-auto w-full min-w-max">
                 <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 lowercase">
@@ -204,9 +245,9 @@ const submit = async () => {
           <Grid2X2X class="mr-2" />
           No child tables found for this sector.
         </div>
-    </div>
+      </div>
 
-  </div>
+    </div>
   </div>
 
   <!-- Modals -->

@@ -51,11 +51,11 @@ const isPriorityIndustries = computed(() =>
       </li>
 
       <li>
-        <!-- <RouterLink to="/invest-profile" custom v-slot="{ isActive, navigate }">
+        <RouterLink to="/in-profile" custom v-slot="{ isActive, navigate }">
           <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
             isActive ? 'btn-active btn-primary' : 'btn-ghost'
-          ]">INvest Profile</button>
-        </RouterLink> -->
+          ]">IN Profile</button>
+        </RouterLink>
       </li>
 
       <li>
@@ -67,11 +67,11 @@ const isPriorityIndustries = computed(() =>
       </li>
 
       <li>
-        <!-- <RouterLink to="/about" custom v-slot="{ isActive, navigate }" exact-active-class="">
+        <RouterLink to="/about" custom v-slot="{ isActive, navigate }" exact-active-class="">
           <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
             isActive ? 'btn-active btn-primary' : 'btn-ghost'
           ]">About</button>
-        </RouterLink> -->
+        </RouterLink>
       </li>
     </ul>
 
@@ -95,27 +95,35 @@ const isPriorityIndustries = computed(() =>
           <ul v-if="open"
             class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-lg border border-slate-200 inner-shadow">
             <li>
-              <!-- <RouterLink to="/" custom v-slot="{isExactActive, navigate}" class="btn w-auto rounded-2xl h-8 btn-ghost">
-                <button @click="navigate" :class="['btn w-auto rounded-2xl h-8 btn-ghost', isExactActive ? 'btn-active btn-primary' : 'btn-ghost ']">Home</button>
-              </RouterLink> -->
+              <RouterLink to="/" custom v-slot="{ isExactActive, navigate }">
+                <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
+                  isExactActive ? 'btn-active btn-primary' : 'btn-ghost'
+                ]">Home</button>
+              </RouterLink>
             </li>
 
             <li>
-              <!-- <RouterLink to="/invest-profile" custom v-slot="{isActive, navigate}">
-                <button @click="navigate" :class="['btn w-auto btn-ghost rounded-2xl h-8', isActive ? 'btn-active btn-primary' : 'btn-ghost']">IN Profile</button>
-              </RouterLink> -->
+              <RouterLink to="/in-profile" custom v-slot="{ isActive, navigate }">
+                <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
+                  isActive ? 'btn-active btn-primary' : 'btn-ghost'
+                ]">IN Profile</button>
+              </RouterLink>
             </li>
 
             <li>
-              <!-- <RouterLink to="/sectors" custom v-slot="{ navigate }">
-                <button @click="navigate" :class="['btn w-auto rounded-2xl h-8', isSectorsActive ? 'btn-active btn-primary' : 'btn-ghost']">Priority Industries</button>
-              </RouterLink> -->
+              <RouterLink to="/priority-industries" custom v-slot="{ navigate }">
+                <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
+                  isPriorityIndustries ? 'btn-active btn-primary' : 'btn-ghost'
+                ]">Priority Industries</button>
+              </RouterLink>
             </li>
 
             <li>
-              <!-- <RouterLink to="/about" custom v-slot="{isActive, navigate}">
-                <button @click="navigate" :class="['btn w-auto btn-ghost rounded-2xl h-8', isActive ? 'btn-active btn-primary' : 'btn-ghost']">About</button>
-              </RouterLink> -->
+              <RouterLink to="/about" custom v-slot="{ isActive, navigate }" exact-active-class="">
+                <button @click="navigate" :class="['btn rounded-2xl h-8 hover:rounded-2xl btn-ghost',
+                  isActive ? 'btn-active btn-primary' : 'btn-ghost'
+                ]">About</button>
+              </RouterLink>
             </li>
 
             <li class="flex justify-center mt-5">

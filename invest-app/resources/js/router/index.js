@@ -23,6 +23,8 @@ import Home from "@/pages/public/Home.vue";
 import PriorityIndustries from "@/pages/public/PriorityIndustries.vue";
 import LoginView from "@/pages/public/Login.vue";
 import EmailVerifiedView from "@/pages/public/EmailVerified.vue";
+import AboutView from "@/pages/public/About.vue"
+import INvestProfileView from "@/pages/public/INvestProfile.vue"
 
 const routes = [
     // Admin Routes
@@ -60,6 +62,9 @@ const routes = [
         children: [
             { path: "", name: "Home", component: Home },
             { path: "priority-industries", name: "PriorityIndustries", component: PriorityIndustries },
+            { path: "about", name: "About", component: AboutView},
+            { path: "in-profile", name:"INProfile", component: INvestProfileView }
+            
             
         ],
     },
