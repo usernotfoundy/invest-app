@@ -9,3 +9,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 require __DIR__.'/modules/powerbi.php';
+require __DIR__.'/modules/website.php';
