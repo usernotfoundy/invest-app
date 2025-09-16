@@ -12,6 +12,7 @@ require __DIR__.'/modules/sectors.php';
 require __DIR__.'/modules/child.php';
 require __DIR__.'/modules/encoding.php';
 require __DIR__.'/modules/website.php';
+require __DIR__.'/modules/inprofile.php';
 
 Route::get('/{any}', function () {
     return view('app'); // loads resources/views/app.blade.php

@@ -1,0 +1,34 @@
+API_URL=localhost:8000/api/inprofile/economicIndicator/2
+
+{
+    "profile_name": "economic indicator",
+    "data": [
+            {
+                "year": 2023,
+                "population": 609588,
+                "purchasing_power": 0.91,
+                "average_annual_family": {
+                    "income": 330630,
+                    "expenditure": 222710
+                }
+            },
+            {
+                "year": 2024,
+                "population": 714388,
+                "purchasing_power": 0.93,
+                "average_annual_family": {
+                    "income": 364800,
+                    "expenditure": 234970
+                }
+            },
+            {
+                "year": 2025,
+                "population": 750398,
+                "purchasing_power": 0.95,
+                "average_annual_family": {
+                    "income": 450890,
+                    "expenditure": 356770
+                }
+            }
+    ]
+}

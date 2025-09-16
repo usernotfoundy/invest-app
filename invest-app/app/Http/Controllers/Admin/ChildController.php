@@ -36,7 +36,7 @@ class ChildController extends Controller
             'data_template' => $validated['data_template'],
         ]);
 
-        // ✅ Create Excel file
+        // Create Excel file
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -50,12 +50,12 @@ class ChildController extends Controller
             $columns = array_keys($template);
         }
 
-        // ✅ Write column headers (first row)
+        // Write column headers (first row)
         foreach ($columns as $index => $colName) {
             $sheet->setCellValueByColumnAndRow($index + 1, 1, $colName);
         }
 
-        // ✅ Save file to storage/app/public/child_templates/
+        // Save file to storage/app/public/child_templates/
         $directory = 'child_templates';
         $fileName = $child->name . '_template.xlsx';
         $filePath = $directory . '/' . $fileName;
@@ -65,7 +65,7 @@ class ChildController extends Controller
         $writer = new Xlsx($spreadsheet);
         $writer->save(storage_path('app/public/' . $filePath));
 
-        // ✅ Save relative path to DB
+        // Save relative path to DB
         $child->file_path = $filePath;
         $child->save();
 
