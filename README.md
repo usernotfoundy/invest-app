@@ -57,6 +57,7 @@ php artisan vendor:publish --tag=laravel-notifications
 #### Create required directory
 ```bash
 mkdir -p storage/app/public/child_templates
+mkdir -p storage/app/public/assets
 ```
 ### 3. Frontend (Vue + Tailwind + Vite)
 #### Install dependencies

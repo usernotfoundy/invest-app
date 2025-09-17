@@ -17,5 +17,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(
             ->name('get-sectors');
         Route::put('/update-sector/{id}', [SectorController::class, 'update'])
             ->name('update-sector');
+        Route::put('/admin/update-thumbnail', [SectorController::class, 'updateThumbnail'])
+            ->name('admin.updateThumbnail');
     }
 );

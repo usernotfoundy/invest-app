@@ -87,4 +87,38 @@ class SectorController extends Controller
 
         return response()->json(['message' => 'Sector updated successfully', 'sector' => $sector]);
     }
+    
+    public function updateThumbnail(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'exists:sectors,id'],
+            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ]);
+
+        $sector = Sector::findOrFail($request->id);
+
+        // Remove old file if exists
+        if ($sector->image_path && Storage::disk('public')->exists($sector->image_path)) {
+            Storage::disk('public')->delete($sector->image_path);
+        }
+
+        // Save new file
+        $directory = 'assets';
+        $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+        $filePath = $directory . '/' . $fileName;
+
+        Storage::disk('public')->makeDirectory($directory);
+        $request->file('image')->storeAs($directory, $fileName, 'public');
+
+        // Update DB
+        $sector->update([
+            'image_path' => $filePath,
+        ]);
+
+        return response()->json([
+            'message' => 'Thumbnail updated successfully',
+            'sector' => $sector,
+        ]);
+    }
+
 }
