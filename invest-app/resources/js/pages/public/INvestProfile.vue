@@ -8,6 +8,7 @@ import PopulationChart from '@/components/charts/PopulationChart.vue'
 import AverageFamilyIncomeChart from '@/components/charts/AverageFamilyIncomeChart.vue'
 import PurchasingPowerChart from '@/components/charts/PurchasingPower.vue';
 import AverageFamilyExpenditure from '@/components/charts/AveFamilyExpenditureChart.vue'
+import INProfileKPI from '@/components/KPI.vue'
 // import DrySeason from '@/assets/images/dry-season.webp'
 // import WetSeason from '@/assets/images/wet-season.webp'
 // import Climate from '@/assets/images/climate.webp'
@@ -136,37 +137,54 @@ onMounted(async () => {
       <!-- Charts -->
       <div
         class="col-span-4 sm:col-span-4 row-span-auto lg:col-span-4 content-center h-auto rounded-lg w-full bg-slate-100 p-5">
-        <h1 class="text-center text-2xl font-bold text-brandSky-8 uppercase">Economic Indicators</h1>
+        <h1 class="text-center text-2xl font-bold text-brandSky-8 pb-3 uppercase">Economic Indicators</h1>
         <div class="grid grid-cols-2 justify-center w-full">
-          <div class="p-5 col-span-2 lg:col-span-1">
+          <div class="lg:p-5 pb-10 col-span-2 lg:col-span-1">
             <PopulationChart class="lg:p-5" />
           </div>
-          <div class="p-5 col-span-2 lg:col-span-1">
+          <div class="lg:p-5 pb-10 col-span-2 lg:col-span-1">
             <PurchasingPowerChart class="lg:p-5" />
           </div>
-          <div class="p-5 col-span-2 lg:col-span-1">
+          <div class="lg:p-5 pb-10 col-span-2 lg:col-span-1">
             <AverageFamilyIncomeChart class="lg:p-5" />
           </div>
-          <div class="p-5 col-span-2 lg:col-span-1">
+          <div class="lg:p-5 pb-10 col-span-2 lg:col-span-1">
             <AverageFamilyExpenditure class="lg:p-5" />
           </div>
         </div>
       </div>
 
+      <div
+        class="col-span-4 sm:col-span-4 lg:col-span-1 h-full rounded-lg bg-slate-100 flex flex-col justify-evenly p-5">
+        <INProfileKPI />
+      </div>
 
-      <div class="col-span-4 sm:col-span-4 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col p-2">
 
-        <!-- Dropdown Selector -->
-        <select v-model="selectedMap" class="select select-bordered select-sm w-full mb-2 bg-white text-gray-800">
+      <div class="col-span-4 sm:col-span-4 lg:col-span-3 rounded-lg bg-slate-100 flex flex-col lg:flex-row p-2">
+
+        <select v-model="selectedMap"
+          class="select select-bordered select-sm lg:hidden w-full mb-2 bg-white text-gray-800">
           <option v-for="(map, index) in hazardMaps" :key="index" :value="map"
             class="bg-white text-gray-800 hover:bg-slate-100">
             {{ map.name }}
           </option>
         </select>
 
-        <!-- Map Viewer -->
-        <ZoomImg v-if="selectedMap" :src="selectedMap.file" :alt="selectedMap.name" zoom-type="move" :step="2"
-          :show-zoom-btns="true" trigger="click" :zoom-scale="10" />
+        <div class="gap-5 hidden lg:flex flex-col mb-2 content-start p-5">
+          <h1 class="font-bold text-2xl text-brandSky-8">Hazard Map</h1>
+          <div v-for="(map, index) in hazardMaps" :key="index" class="flex items-center">
+            <input type="radio" :id="'radio-' + index" :value="map" v-model="selectedMap"
+              class="radio radio-sm text-gray-600" />
+            <label :for="'radio-' + index" class="ml-1 text-sm font-medium text-gray-800 cursor-pointer">
+              {{ map.name }}
+            </label>
+          </div>
+        </div>
+
+        <div class="flex flex-1 justify-center items-center lg:ml-2">
+          <ZoomImg v-if="selectedMap" :src="selectedMap.file" :alt="selectedMap.name" zoom-type="move" :step="2"
+            :show-zoom-btns="true" trigger="click" :zoom-scale="10" class="w-100 h-auto object-contain" />
+        </div>
       </div>
 
       <!-- Row 1: Capital, Land Area, Coastline -->
