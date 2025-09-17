@@ -12,6 +12,7 @@ class ChildSector extends Model
         'data',
         'data_template',
         'file_path',
+        'powerbi_path',
     ];
 
     protected $appends = ['api_url'];
