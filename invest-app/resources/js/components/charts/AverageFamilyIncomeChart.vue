@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import { Line } from 'vue-chartjs' // ✅ Change Bar to Line
+import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  PointElement, // ✅ Add PointElement
-  LineElement, // ✅ Add LineElement
+  PointElement, 
+  LineElement,
   CategoryScale,
   LinearScale,
   Filler,
@@ -33,7 +33,7 @@ ChartJS.register(
 
 export default {
   name: 'Average Family Income',
-  components: { Line }, // ✅ Change Bar to Line
+  components: { Line },
   data() {
     return {
       chartData: null,
@@ -54,7 +54,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await axios.get('/api/inprofile/economicIndicator/1')
+      const res = await axios.get('/api/inprofile/economicIndicator')
       const apiData = res.data
 
       if (apiData && apiData.datasets && Array.isArray(apiData.datasets)) {
@@ -63,10 +63,9 @@ export default {
         )
 
         if (averageFamilyIncomeDataset) {
-          // ✅ Add a line-specific background color and border color
           averageFamilyIncomeDataset.backgroundColor = 'rgba(21, 76, 121, 0.5)' 
           averageFamilyIncomeDataset.borderColor = '#154c79' 
-          averageFamilyIncomeDataset.fill = true // Fills the area under the line
+          averageFamilyIncomeDataset.fill = true
 
           this.chartData = {
             labels: apiData.labels,
