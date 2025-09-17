@@ -4,6 +4,10 @@ import { ref, onMounted } from 'vue'
 import { ZoomImg } from "vue3-zoomer";
 import { ArrowRightLeft } from 'lucide-vue-next';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+import PopulationChart from '@/components/charts/PopulationChart.vue'
+import AverageFamilyIncomeChart from '@/components/charts/AverageFamilyIncomeChart.vue'
+import PurchasingPowerChart from '@/components/charts/PurchasingPower.vue';
+import AverageFamilyExpenditure from '@/components/charts/AveFamilyExpenditureChart.vue'
 // import DrySeason from '@/assets/images/dry-season.webp'
 // import WetSeason from '@/assets/images/wet-season.webp'
 // import Climate from '@/assets/images/climate.webp'
@@ -58,8 +62,8 @@ onMounted(async () => {
   <div
     class="w-auto bg-[url('@/assets/images/header.png')] bg-cover bg-center flex flex-col items-center justify-center py-5"
     style="min-height: 150px; margin-left: calc(50% - 50vw);">
-    <img src="@/assets/images/in-logo.webp" class="w-24 lg:w-24" alt="Ilocos Norte Seal" />
-    <h1 class="font-leagueSpartan text-5xl pt-4 lg:text-7xl font-extrabold text-shadow-lg uppercase text-white">
+    <img src="@/assets/images/in-logo.webp" class="w-18 lg:w-24" alt="Ilocos Norte Seal" />
+    <h1 class="font-leagueSpartan text-3xl pt-2 lg:text-7xl font-extrabold text-shadow-lg uppercase text-white">
       Ilocos Norte
     </h1>
   </div>
@@ -69,7 +73,7 @@ onMounted(async () => {
 
       <!-- Row 1: Capital, Land Area, Coastline -->
       <div
-        class="relative col-span-4 sm:col-span-1 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col items-center p-10 justify-center transition">
+        class="relative col-span-4 sm:col-span-4 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col items-center p-5 justify-center transition">
         <!-- Rotating Arrow Button -->
         <!-- <button @click="openMunicipalModal"
           class="absolute top-4 right-4 p-2 bg-brandSky-5 text-white rounded-full shadow hover:bg-brandSky-3 transition-transform transform hover:rotate-90">
@@ -109,7 +113,7 @@ onMounted(async () => {
           :alt="selectedMunicipality ? selectedMunicipality.name + ' Seal' : 'No Seal'" class="w-16 mb-3" />
         <h1 class="text-3xl font-bold text-sky-800 leading-5 uppercase">{{ selectedMunicipality ?
           selectedMunicipality.name : '-' }}</h1>
-        <h2 class="text-lg lg:text-2xl text-gray-700 mt-1 leading-tight"> {{ selectedMunicipality ?
+        <h2 class="text-lg lg:text-xl text-gray-700 mt-1 uppercase leading-tight"> {{ selectedMunicipality ?
           selectedMunicipality.type : '-' }} </h2>
       </div>
 
@@ -118,7 +122,7 @@ onMounted(async () => {
         <h1 class="text-3xl lg:text-5xl font-extrabold text-sky-800">
           {{ selectedMunicipality ? selectedMunicipality.district : '-' }}
         </h1>
-        <h2 class="text-lg lg:text-xl text-gray-700 mb-1 uppercase leading-tight">District</h2>
+        <h2 class="text-sm lg:text-lg text-gray-700 mb-1 uppercase leading-tight">District</h2>
       </div>
 
       <div
@@ -126,15 +130,31 @@ onMounted(async () => {
         <h1 class="text-3xl lg:text-5xl font-extrabold text-sky-800">
           {{ selectedMunicipality ? selectedMunicipality.barangays : '-' }}
         </h1>
-        <h2 class="text-lg lg:text-xl text-gray-700 mb-1 uppercase leading-tight">Barangays</h2>
+        <h2 class="text-sm lg:text-xl text-gray-700 mb-1 uppercase leading-tight">Barangays</h2>
       </div>
 
-      <!-- Selectors -->
-      <!-- <div class="hidden col-span-2 sm:col-span-2 lg:col-span-2 rounded-lg bg-slate-100 lg:flex flex-col p-10">
-        <h1>Selectors</h1>
-      </div> -->
+      <!-- Charts -->
+      <div
+        class="col-span-4 sm:col-span-4 row-span-auto lg:col-span-4 content-center h-auto rounded-lg w-full bg-slate-100 p-5">
+        <h1 class="text-center text-2xl font-bold text-brandSky-8 uppercase">Economic Indicators</h1>
+        <div class="grid grid-cols-2 justify-center w-full">
+          <div class="p-5 col-span-2 lg:col-span-1">
+            <PopulationChart class="lg:p-5" />
+          </div>
+          <div class="p-5 col-span-2 lg:col-span-1">
+            <PurchasingPowerChart class="lg:p-5" />
+          </div>
+          <div class="p-5 col-span-2 lg:col-span-1">
+            <AverageFamilyIncomeChart class="lg:p-5" />
+          </div>
+          <div class="p-5 col-span-2 lg:col-span-1">
+            <AverageFamilyExpenditure class="lg:p-5" />
+          </div>
+        </div>
+      </div>
 
-      <div class="col-span-4 sm:col-span-1 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col p-2">
+
+      <div class="col-span-4 sm:col-span-4 lg:col-span-2 rounded-lg bg-slate-100 flex flex-col p-2">
 
         <!-- Dropdown Selector -->
         <select v-model="selectedMap" class="select select-bordered select-sm w-full mb-2 bg-white text-gray-800">
