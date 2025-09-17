@@ -13,7 +13,13 @@ Route::middleware('guest')->group(
             ->name('inprofile.create');
         Route::delete('/inprofile/delete/{id}', [InProfileController::class, 'destroy'])
             ->name('inprofile.delete');
-        Route::get('/inprofile/economicIndicator/{id}', [InProfileController::class, 'economicIndicator'])
+        Route::get('/inprofile/economicIndicator', [InProfileController::class, 'economicIndicator'])
             ->name('inprofile.economicIndicator');
+        Route::get('/inprofile/crimeEfficiency', [InProfileController::class, 'crimeEfficiency'])
+            ->name('inprofile.crimeEfficiency');
+        Route::get('/inprofile/povertyIncidence', [InProfileController::class, 'povertyIncidence'])
+            ->name('inprofile.povertyIncidence');
+        Route::get('/inprofile/literacyRate', [InProfileController::class, 'literacyRate'])
+            ->name('inprofile.literacyRate');
     }
 );

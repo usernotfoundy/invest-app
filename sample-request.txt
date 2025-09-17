@@ -1,5 +1,6 @@
-API_URL=localhost:8000/api/inprofile/economicIndicator/2
+API_URL=localhost:8000/api/inprofile/create
 
+//ECONOMIC INDICATOR
 {
     "profile_name": "economic indicator",
     "data": [
@@ -30,5 +31,56 @@ API_URL=localhost:8000/api/inprofile/economicIndicator/2
                     "expenditure": 356770
                 }
             }
+    ]
+}
+
+
+//CRIME EFFICIENCY
+{
+    "profile_name": "crime efficiency",
+    "data": [
+        {
+            "year": 2023,
+            "rate": 92
+        },
+                {
+            "year": 2024,
+            "rate": 86
+        },
+                {
+            "year": 2025,
+            "rate": 93
+        }
+    ]
+}
+
+//POVERTY INCIDENCE
+{
+    "profile_name": "poverty incidence",
+    "data": [
+        {
+            "year": 2018,
+            "estimates": 4.5
+        },
+                {
+            "year": 2021,
+            "estimates": 86
+        },
+                {
+            "year": 2023,
+            "estimates": 0.5
+        }
+    ]
+}
+
+//LITERACY RATE
+{
+    "profile_name": "literacy rate",
+    "data": [
+        {
+            "year": 2023,
+            "simple literacy rate": 96.5,
+            "functional literacy rate": 91.5
+        }
     ]
 }

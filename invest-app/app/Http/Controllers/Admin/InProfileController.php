@@ -34,9 +34,7 @@ class InProfileController extends Controller
 
     public function index()
     {
-        // $sectors = Sector::all();
-        // $profiles = InProfile::select('id', 'profile_name', 'data')->get();
-        $profiles = InProfile::all();
+        $profiles = InProfile::select('id', 'profile_name')->get();
         return response()->json($profiles);
     }
 
@@ -48,39 +46,70 @@ class InProfileController extends Controller
         return response()->json(['message' => 'profile deleted successfully']);
     }
 
-public function economicIndicator($id)
-{
-    $profile = InProfile::findOrFail($id);
+    public function economicIndicator()
+    {
+        $profileName = "economic indicator";
+        $profile = InProfile::select('profile_name', 'data')
+            ->where('profile_name', $profileName)
+            ->firstOrFail();
 
-    $years = collect($profile->data)->pluck('year');
+        $years = collect($profile->data)->pluck('year');
 
-    // Example: extract multiple datasets
-    $populations = collect($profile->data)->pluck('population');
-    $purchasingPower = collect($profile->data)->pluck('purchasing_power');
-    $income = collect($profile->data)->pluck('average_annual_family.income');
-    $expenditure = collect($profile->data)->pluck('average_annual_family.expenditure');
+        $populations = collect($profile->data)->pluck('population');
+        $purchasingPower = collect($profile->data)->pluck('purchasing_power');
+        $income = collect($profile->data)->pluck('average_annual_family.income');
+        $expenditure = collect($profile->data)->pluck('average_annual_family.expenditure');
 
-    return response()->json([
-        'labels' => $years,
-        'datasets' => [
-            [
-                'label' => 'Population',
-                'data' => $populations,
+        return response()->json([
+            'labels' => $years,
+            'datasets' => [
+                [
+                    'label' => 'Population',
+                    'data' => $populations,
+                ],
+                [
+                    'label' => 'Purchasing Power',
+                    'data' => $purchasingPower,
+                ],
+                [
+                    'label' => 'Average Family Income',
+                    'data' => $income,
+                ],
+                [
+                    'label' => 'Average Family Expenditure',
+                    'data' => $expenditure,
+                ],
             ],
-            [
-                'label' => 'Purchasing Power',
-                'data' => $purchasingPower,
-            ],
-            [
-                'label' => 'Average Family Income',
-                'data' => $income,
-            ],
-            [
-                'label' => 'Average Family Expenditure',
-                'data' => $expenditure,
-            ],
-        ],
-    ]);
-}
+        ]);
+    }
 
+    public function crimeEfficiency()
+    {
+        $profileName = "crime efficiency";
+        $profile = InProfile::select('profile_name', 'data')
+            ->where('profile_name', $profileName)
+            ->firstOrFail();
+
+        return response()->json($profile);
+    }
+
+    public function povertyIncidence()
+    {
+        $profileName = "poverty incidence";
+        $profile = InProfile::select('profile_name', 'data')
+            ->where('profile_name', $profileName)
+            ->firstOrFail();
+
+        return response()->json($profile);
+    }
+
+    public function literacyRate()
+    {
+        $profileName = "literacy rate";
+        $profile = InProfile::select('profile_name', 'data')
+            ->where('profile_name', $profileName)
+            ->firstOrFail();
+
+        return response()->json($profile);
+    }
 }
