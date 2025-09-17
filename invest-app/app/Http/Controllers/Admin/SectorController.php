@@ -9,15 +9,14 @@ use App\Models\Sector;
 
 class SectorController extends Controller
 {
-    //
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $validated = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'description' => ['nullable', 'string', 'max:1000'],
+                'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
@@ -25,17 +24,40 @@ class SectorController extends Controller
             ], 422);
         }
 
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            // Define directory same way as createChild
+            $directory = 'assets';
+
+            // Generate filename
+            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $filePath = $directory . '/' . $fileName;
+
+            // Ensure directory exists in storage/app/public
+            Storage::disk('public')->makeDirectory($directory);
+
+            // Store file
+            $request->file('image')->storeAs($directory, $fileName, 'public');
+
+            // Save relative path to DB
+            $imagePath = $filePath;
+        }
+
         $sector = Sector::create([
-            'name' => $request->name,
-            'description' => $request->description,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'image_path' => $imagePath,
         ]);
 
-        return response()->json(['message' => 'Sector created successfully', 'sector' => $sector], 201);
+        return response()->json([
+            'message' => 'Sector created successfully',
+            'sector' => $sector,
+        ], 201);
     }
 
     public function index()
     {
-        // $sectors = Sector::all();
         $sectors = Sector::select('id', 'name')->get();
         return response()->json($sectors);
     }

@@ -23,3 +23,12 @@ Route::middleware('guest')->group(
             ->name('inprofile.literacyRate');
     }
 );
+
+// Route::middleware(['auth:sanctum', 'role:admin'])->group(
+//     function () {
+//        Route::post('/inprofile/create', [InProfileController::class, 'store'])
+//             ->name('inprofile.create');
+//         Route::delete('/inprofile/delete/{id}', [InProfileController::class, 'destroy'])
+//             ->name('inprofile.delete');
+//     }
+// );
