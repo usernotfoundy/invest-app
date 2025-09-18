@@ -9,6 +9,7 @@ import AverageFamilyIncomeChart from '@/components/charts/AverageFamilyIncomeCha
 import PurchasingPowerChart from '@/components/charts/PurchasingPower.vue';
 import AverageFamilyExpenditure from '@/components/charts/AveFamilyExpenditureChart.vue'
 import INProfileKPI from '@/components/KPI.vue'
+import INLocators from '@/components/Locators.vue'
 // import DrySeason from '@/assets/images/dry-season.webp'
 // import WetSeason from '@/assets/images/wet-season.webp'
 // import Climate from '@/assets/images/climate.webp'
@@ -170,14 +171,14 @@ onMounted(async () => {
           </option>
         </select>
 
-        <div class="gap-5 hidden lg:flex flex-col mb-2 content-start p-5">
-          <h1 class="font-bold text-2xl text-brandSky-8">Hazard Map</h1>
+        <div class="gap-5 hidden lg:flex flex-col mb-2 justify-center p-5">
+          <h1 class="font-bold text-3xl text-brandSky-8">Hazard Map</h1>
           <div v-for="(map, index) in hazardMaps" :key="index" class="flex items-center">
-            <input type="radio" :id="'radio-' + index" :value="map" v-model="selectedMap"
-              class="radio radio-sm text-gray-600" />
-            <label :for="'radio-' + index" class="ml-1 text-sm font-medium text-gray-800 cursor-pointer">
+            <button @click="selectedMap = map"
+              :class="{ 'bg-primary text-white': selectedMap === map, 'bg-gray-200 text-gray-800': selectedMap !== map }"
+              class="p-2 rounded-md font-medium text-sm cursor-pointer hover:bg-brandSky-7 hover:text-white transition-colors duration-200">
               {{ map.name }}
-            </label>
+            </button>
           </div>
         </div>
 
@@ -185,6 +186,10 @@ onMounted(async () => {
           <ZoomImg v-if="selectedMap" :src="selectedMap.file" :alt="selectedMap.name" zoom-type="move" :step="2"
             :show-zoom-btns="true" trigger="click" :zoom-scale="10" class="w-100 h-auto object-contain" />
         </div>
+      </div>
+
+      <div class="col-span-4 sm:col-span-4 lg:col-span-4 h-full flex justify-center items-center rounded-lg bg-slate-100 p-5">
+        <INLocators />
       </div>
 
       <!-- Row 1: Capital, Land Area, Coastline -->

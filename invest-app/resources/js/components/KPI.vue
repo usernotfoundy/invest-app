@@ -67,17 +67,17 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col md:flex-row justify-around lg:flex-col text-center w-full">
-    <div v-if="crimeEfficiency" class="flex flex-col items-center justify-center p-4">
+    <div v-if="crimeEfficiency" class="flex flex-col lg:pb-10 items-center justify-center p-4">
       <h1 class="font-bold text-3xl text-brandSky-8">{{ crimeEfficiency.value }}{{ crimeEfficiency.unit }}</h1>
       <p class="text-gray-600">{{ crimeEfficiency.label }}</p>
     </div>
 
-    <div v-if="povertyIncidence" class="flex flex-col items-center justify-center p-4">
+    <div v-if="povertyIncidence" class="flex flex-col lg:pb-10 items-center justify-center p-4">
       <h1 class="font-bold text-3xl text-brandSky-8">{{ povertyIncidence.value }}{{ povertyIncidence.unit }}</h1>
       <p class="text-gray-600">{{ povertyIncidence.label }}</p>
     </div>
 
-    <div v-if="literacyRate" class="flex flex-col items-center justify-center p-4">
+    <div v-if="literacyRate" class="flex flex-col lg:pb-10 items-center justify-center p-4">
       <h1 class="font-bold text-3xl text-brandSky-8">{{ literacyRate.value }}{{ literacyRate.unit }}</h1>
       <p class="text-gray-600">{{ literacyRate.label }}</p>
     </div>
