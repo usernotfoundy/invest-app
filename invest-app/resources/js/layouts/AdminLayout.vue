@@ -58,7 +58,7 @@ const isSectorsActive = computed(() =>
     <div class="drawer lg:drawer-open text-textColor-1 font-textFont">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content">
-        <div class="p-5 overflow-y-hidden">
+        <div class="p-5 overflow-y-hidden" style="height: 100dvh">
           <RouterView />
         </div>
       </div>

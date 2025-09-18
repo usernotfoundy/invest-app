@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "@/router/index.js";
 
 const axiosClient = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   withXSRFToken: true
 })

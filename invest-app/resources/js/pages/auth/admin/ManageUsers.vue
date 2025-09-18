@@ -4,10 +4,12 @@ import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle, Menu
 import { UserGroupIcon } from '@heroicons/vue/16/solid';
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user.js';
-import { useSectorStore } from '@/stores/sector.js'
+import { useSectorStore } from '@/stores/sector.js';
+import { useLogStore } from '@/stores/logs.js';
 
 const userStore = useUserStore();
 const sectorStore = useSectorStore();
+const logStore = useLogStore();
 
 const name = ref("");
 const password = ref("");
@@ -26,6 +28,7 @@ const selectedUser = ref(null);
 onMounted(() => {
   userStore.fetchUsers();
   sectorStore.fetchSectors();
+  logStore.fetchLogs();
 });
 
 const createUser = async () => {
@@ -105,200 +108,216 @@ function openModal() {
 </script>
 
 <template>
-  <div class="grid grid-cols-12 gap-2 grid-rows-[auto]">
+  <div class="grid grid-cols-3 gap-2">
 
-    <!-- Page Title -->
-    <div class="col-span-5 flex items-center">
-      <h1 class="font-bold text-5xl">Manage Users</h1>
+    <div class="grid grid-cols-2 gap-2 col-span-2">
+      <!-- Page Title -->
+      <div class="col-span-3 flex py-5 items-center">
+        <h1 class="font-bold text-5xl">Manage Users</h1>
+      </div>
+
+      <!-- Admin -->
+      <div class="col-span-1 shadow-sm rounded-lg bg-white p-3">
+        <div class="grid grid-cols-2 h-full">
+          <div class="flex flex-col justify-center items-center">
+            <h1 class="font-bold text-5xl text-textColor-1">26</h1>
+            <h2 class="text-xs">Admin</h2>
+          </div>
+          <div class="flex justify-center items-center">
+            <UserGroupIcon class="size-16" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Encoder -->
+      <div class="col-span-1 shadow-sm rounded-lg bg-white p-3">
+        <div class="grid grid-cols-2 h-full">
+          <div class="flex flex-col justify-center items-center">
+            <h1 class="font-bold text-5xl text-textColor-1">26</h1>
+            <h2 class="text-xs">Encoder</h2>
+          </div>
+          <div class="flex justify-center items-center">
+            <UserGroupIcon class="size-16" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Activity -->
+      <div class="col-span-1 shadow-sm rounded-lg bg-white p-3">
+        <div class="grid grid-cols-2 h-full">
+          <div class="flex flex-col items-center justify-center">
+            <h1 class="font-bold text-5xl text-textColor-1">151</h1>
+            <h2 class="text-xs">Today's Activiy</h2>
+          </div>
+          <div class="flex justify-center items-center">
+            <ChartNoAxesCombined class="size-16" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar and Create User Button -->
+      <div class="col-span-3 pt-3 flex">
+        <div class="flex-1">
+          <label class="input">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input id="search" type="search" class="grow" placeholder="Search" />
+          </label>
+        </div>
+
+        <!-- Create User Button -->
+        <button type="button" class="btn btn-primary" @click="openModal">
+          <PlusCircle size="20" /> Create User
+        </button>
+
+      </div>
+
+      <!-- Main Table -->
+      <div class="col-span-3 shadow-sm rounded-lg">
+        <div class="overflow-auto rounded-lg bg-white"
+          style="height: calc(100dvh - 290px); max-height: calc(100dvh - 290px);">
+          <table class="table table-hover table-auto max-h-64 overflow-y-auto w-full">
+            <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 uppercase">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Assigned Sector</th>
+                <th class="flex items-center justify-center">Action</th>
+              </tr>
+            </thead>
+
+            <tbody class="bg-white overflow-y-auto">
+              <!-- Loading Message -->
+              <tr v-if="userStore.loadingFetchUser">
+                <td colspan="6" class="text-center py-20 text-gray-500 text-lg">
+                  Loading users...
+                </td>
+              </tr>
+
+              <!-- Actual Users -->
+              <tr v-else v-for="user in userStore.usersList" :key="user.id"
+                class="hover:bg-slate-100 transition-colors">
+                <th>{{ user.id }}</th>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.assigned_sector }}</td>
+                <td class="flex items-center justify-center">
+                  <div>
+                    <Menu as="div" class="relative inline-block text-left">
+                      <MenuButton class="cursor-pointer hover:bg-slate-200 rounded-full">
+                        <Ellipsis />
+                      </MenuButton>
+                      <transition enter-active-class="transition duration-100 ease-out"
+                        enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+                        leave-active-class="transition duration-75 ease-in"
+                        leave-from-class="transform scale-100 opacity-100"
+                        leave-to-class="transform scale-95 opacity-0">
+                        <MenuItems
+                          class="absolute def-inner-shadow right-0 mt-2 p-3 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 z-50 ring-black/5 focus:outline-none">
+                          <div class="flex flex-col">
+                            <MenuItem v-slot="{ active }">
+                            <button
+                              :class="[active ? 'bg-btnHover' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-sm cursor-pointer']"
+                              :key="user.id" @click="openUpdateUser(user)">
+                              <UserPen size="16" class="mr-2" />
+                              <span>Update User</span>
+                            </button>
+                            </MenuItem>
+
+                            <MenuItem v-slot="{ active }">
+                            <button
+                              :class="[active ? 'bg-btnHover text-red-700' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-sm cursor-pointer']"
+                              :key="user.id" @click="openDeleteConfirm(user)">
+                              <UserX size="16" class="mr-2" />
+                              <span>Delete User</span>
+                            </button>
+                            </MenuItem>
+                          </div>
+                        </MenuItems>
+                      </transition>
+                    </Menu>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- No Users -->
+              <tr v-if="!userStore.loadingFetchUsers && !userStore.usersList.length">
+                <td colspan="6" class="text-center py-4">No users found.</td>
+              </tr>
+
+              <!-- Error Message -->
+              <tr v-if="userStore.fetchUsersError">
+                <td colspan="6" class="text-center py-4 text-red-500">
+                  {{ userStore.fetchUsersError }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
+
     <!-- Recent Activites -->
-    <div class="col-span-5 shadow-sm rounded-lg row-span-2 col-start-8  bg-white p-5 space-y-3">
+    <div class="col-span-1 shadow-sm rounded-lg bg-white p-5 space-y-3">
       <h1 class="font-bold text-2xl">Recent Activities</h1>
+
       <div class="overflow-x-auto">
-        <table class="table table-xs table-pin-rows table-pin-cols">
+        <table class="table table-xs table-pin-rows w-full">
           <thead class="font-bold text-textColor-1">
             <tr>
-              <td>Username</td>
-              <td>Activity</td>
+              <td>ID</td>
+              <td>Log</td>
+              <td>User</td>
               <td>Performed At</td>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>INvest Admin</td>
-              <td>Edit agri_food column</td>
-              <td>20 Oct. 2025 00:00 AM</td>
+            <!-- Loading -->
+            <tr v-if="logStore.fetchLogsLoading">
+              <td colspan="4" class="text-center py-20 text-gray-500 text-lg">
+                Loading logs...
+              </td>
             </tr>
-            <tr>
-              <td>INvest Admin</td>
-              <td>Edit agri_food column</td>
-              <td>20 Oct. 2025 00:00 AM</td>
+
+            <!-- Error -->
+            <tr v-else-if="logStore.fetchLogsError">
+              <td colspan="4" class="text-center py-20 text-red-500 text-lg">
+                Error: {{ logStore.fetchLogsError }}
+              </td>
             </tr>
-            <tr>
-              <td>INvest Admin</td>
-              <td>Edit agri_food column</td>
-              <td>20 Oct. 2025 00:00 AM</td>
+
+            <!-- Logs -->
+            <tr v-else v-for="log in [...logStore.logs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))"
+              :key="log.id" class="hover:bg-slate-100 transition-colors">
+              <td>{{ log.id }}</td>
+              <td>{{ log.description }}</td>
+              <td>{{ log.causer?.name || "Unknown" }}</td>
+              <td>{{ new Date(log.created_at).toLocaleString() }}</td>
             </tr>
-            <tr>
-              <td>INvest Admin</td>
-              <td>Edit agri_food column</td>
-              <td>20 Oct. 2025 00:00 AM</td>
-            </tr>
-            <tr>
-              <td>INvest Admin</td>
-              <td>Edit agri_food column</td>
-              <td>20 Oct. 2025 00:00 AM</td>
+
+            <!-- No Logs -->
+            <tr v-if="
+              !logStore.fetchLogsLoading &&
+              !logStore.fetchLogsError &&
+              logStore.logs.length === 0
+            ">
+              <td colspan="4" class="text-center py-4">No logs found.</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Admin -->
-    <div class="col-span-2 shadow-sm rounded-lg bg-white p-3">
-      <div class="grid grid-cols-2 h-full">
-        <div class="flex flex-col justify-center items-center">
-          <h1 class="font-bold text-5xl text-textColor-1">26</h1>
-          <h2 class="text-xs">Admin</h2>
-        </div>
-        <div class="flex justify-center items-center">
-          <UserGroupIcon class="size-16" />
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Encoder -->
-    <div class="col-span-2 shadow-sm rounded-lg row-start-2 bg-white p-3">
-      <div class="grid grid-cols-2 h-full">
-        <div class="flex flex-col justify-center items-center">
-          <h1 class="font-bold text-5xl text-textColor-1">26</h1>
-          <h2 class="text-xs">Encoder</h2>
-        </div>
-        <div class="flex justify-center items-center">
-          <UserGroupIcon class="size-16" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Today's Activity -->
-    <div class="col-span-3 col-start-5 shadow-sm rounded-lg row-start-2 bg-white p-3">
-      <div class="grid grid-cols-2 h-full">
-        <div class="flex flex-col items-center justify-center">
-          <h1 class="font-bold text-5xl text-textColor-1">151</h1>
-          <h2 class="text-xs">Today's Activiy</h2>
-        </div>
-        <div class="flex justify-center items-center">
-          <ChartNoAxesCombined class="size-16" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Bar and Create User Button -->
-    <div class="col-span-12 pt-3 flex">
-      <div class="flex-1">
-        <label class="input">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input id="search" type="search" class="grow" placeholder="Search" />
-        </label>
-      </div>
-
-      <!-- Create User Button -->
-      <button type="button" class="btn btn-primary" @click="openModal">
-        <PlusCircle size="20" /> Create User
-      </button>
-
-    </div>
-
-    <!-- Main Table -->
-    <div class="col-span-12 shadow-sm rounded-lg">
-      <div class="overflow-auto rounded-lg h-[50lvh] bg-white">
-        <table class="table table-hover table-auto max-h-64 overflow-y-auto w-full">
-          <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 uppercase">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Assigned Sector</th>
-              <th class="flex items-center justify-center">Action</th>
-            </tr>
-          </thead>
-
-          <tbody class="bg-white overflow-y-auto">
-            <!-- Loading Message -->
-            <tr v-if="userStore.loadingFetchUser">
-              <td colspan="6" class="text-center py-20 text-gray-500 text-lg">
-                Loading users...
-              </td>
-            </tr>
-
-            <!-- Actual Users -->
-            <tr v-else v-for="user in userStore.usersList" :key="user.id" class="hover:bg-slate-100 transition-colors">
-              <th>{{ user.id }}</th>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.role }}</td>
-              <td>{{ user.assigned_sector }}</td>
-              <td class="flex items-center justify-center">
-                <div>
-                  <Menu as="div" class="relative inline-block text-left">
-                    <MenuButton class="cursor-pointer hover:bg-slate-200 rounded-full">
-                      <Ellipsis />
-                    </MenuButton>
-                    <transition enter-active-class="transition duration-100 ease-out"
-                      enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-                      leave-active-class="transition duration-75 ease-in"
-                      leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
-                      <MenuItems
-                        class="absolute def-inner-shadow right-0 mt-2 p-3 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 z-50 ring-black/5 focus:outline-none">
-                        <div class="flex flex-col">
-                          <MenuItem v-slot="{ active }">
-                          <button
-                            :class="[active ? 'bg-btnHover' : 'text-gray-900', 'group flex w-full items-center rounded-md px-2 py-2 text-sm cursor-pointer']"
-                            :key="user.id" @click="openUpdateUser(user)">
-                            <UserPen size="16" class="mr-2" />
-                            <span>Update User</span>
-                          </button>
-                          </MenuItem>
-
-                          <MenuItem v-slot="{ active }">
-                          <button
-                            :class="[active ? 'bg-btnHover text-red-700' : 'text-red-700', 'group flex w-full items-center rounded-md px-2 py-2 text-sm cursor-pointer']"
-                            :key="user.id" @click="openDeleteConfirm(user)">
-                            <UserX size="16" class="mr-2" />
-                            <span>Delete User</span>
-                          </button>
-                          </MenuItem>
-                        </div>
-                      </MenuItems>
-                    </transition>
-                  </Menu>
-                </div>
-              </td>
-            </tr>
-
-            <!-- No Users -->
-            <tr v-if="!userStore.loadingFetchUsers && !userStore.usersList.length">
-              <td colspan="6" class="text-center py-4">No users found.</td>
-            </tr>
-
-            <!-- Error Message -->
-            <tr v-if="userStore.fetchUsersError">
-              <td colspan="6" class="text-center py-4 text-red-500">
-                {{ userStore.fetchUsersError }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
 
     <!-- Modals -->
@@ -334,8 +353,8 @@ function openModal() {
                     <div class="mt-2 flex flex-col space-y-3">
                       <label class="input w-96" for="name">
                         <ALargeSmall class="size-4" color="#949494" />
-                        <input class="grow" id="name" type="text" v-model="name" autocomplete="true" placeholder="Enter full name"
-                          required />
+                        <input class="grow" id="name" type="text" v-model="name" autocomplete="true"
+                          placeholder="Enter full name" required />
                       </label>
 
                       <!-- Email -->
@@ -343,8 +362,8 @@ function openModal() {
                       <div>
                         <label class="input w-96" for="email">
                           <AtSign class="size-4" color="#949494" />
-                          <input class="grow" id="email" type="email" v-model="email" autocomplete="true" placeholder="Enter email address"
-                            required />
+                          <input class="grow" id="email" type="email" v-model="email" autocomplete="true"
+                            placeholder="Enter email address" required />
                         </label>
 
                         <p v-if="userStore.createUserError?.email" class="flex text-xs text-red-700 mt-1">
@@ -357,8 +376,8 @@ function openModal() {
                       <div>
                         <label class="input w-96" for="password">
                           <Lock class="size-4" color="#949494" />
-                          <input name="password" id="password" type="password" v-model="password" autocomplete="off" placeholder="Enter password"
-                            required />
+                          <input name="password" id="password" type="password" v-model="password" autocomplete="off"
+                            placeholder="Enter password" required />
                         </label>
                         <p v-if="userStore.createUserError?.password" class="flex text-xs text-red-700 mt-1">
                           <CircleAlert class="mr-2" size="14" />
@@ -379,7 +398,8 @@ function openModal() {
                       <!-- Assigned Sector -->
                       <label v-if="role === 'agency'" class="input w-95" for="assigned_sector">
                         <SquareMousePointer class="size-4" color="#949494" />
-                        <select id="assigned_sector" name="assignedSector" class="w-full focus:outline-none" v-model="assignedSector" required>
+                        <select id="assigned_sector" name="assignedSector" class="w-full focus:outline-none"
+                          v-model="assignedSector" required>
                           <option disabled value="">Select Sector</option>
                           <option v-for="sector in sectorStore.sectorsList" :key="sector.id" :value="sector.id">
                             {{ sector.name }}
@@ -435,8 +455,8 @@ function openModal() {
                       <p class="text-sm text-gray-500">
                         Deleting this user cannot be undone. Type <span class="font-bold">confirm</span> to delete.
                       </p>
-                      <input id="confirmDeleteText" name="confirmDeleteText" v-model="confirmDeleteText" type="text" placeholder="Type confirm"
-                        class="mt-2 w-full border rounded px-2 py-1" />
+                      <input id="confirmDeleteText" name="confirmDeleteText" v-model="confirmDeleteText" type="text"
+                        placeholder="Type confirm" class="mt-2 w-full border rounded px-2 py-1" />
                     </div>
 
                     <!-- Submit Button -->
