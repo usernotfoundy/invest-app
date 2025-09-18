@@ -9,6 +9,7 @@ import AverageFamilyIncomeChart from '@/components/charts/AverageFamilyIncomeCha
 import PurchasingPowerChart from '@/components/charts/PurchasingPower.vue';
 import AverageFamilyExpenditure from '@/components/charts/AveFamilyExpenditureChart.vue'
 import INProfileKPI from '@/components/KPI.vue'
+import INLocators from '@/components/Locators.vue'
 // import DrySeason from '@/assets/images/dry-season.webp'
 // import WetSeason from '@/assets/images/wet-season.webp'
 // import Climate from '@/assets/images/climate.webp'
@@ -185,6 +186,10 @@ onMounted(async () => {
           <ZoomImg v-if="selectedMap" :src="selectedMap.file" :alt="selectedMap.name" zoom-type="move" :step="2"
             :show-zoom-btns="true" trigger="click" :zoom-scale="10" class="w-100 h-auto object-contain" />
         </div>
+      </div>
+
+      <div class="col-span-4 sm:col-span-4 lg:col-span-4 h-full flex justify-center items-center rounded-lg bg-slate-100 p-5">
+        <INLocators />
       </div>
 
       <!-- Row 1: Capital, Land Area, Coastline -->
