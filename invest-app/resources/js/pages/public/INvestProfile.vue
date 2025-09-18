@@ -170,14 +170,14 @@ onMounted(async () => {
           </option>
         </select>
 
-        <div class="gap-5 hidden lg:flex flex-col mb-2 content-start p-5">
-          <h1 class="font-bold text-2xl text-brandSky-8">Hazard Map</h1>
+        <div class="gap-5 hidden lg:flex flex-col mb-2 justify-center p-5">
+          <h1 class="font-bold text-3xl text-brandSky-8">Hazard Map</h1>
           <div v-for="(map, index) in hazardMaps" :key="index" class="flex items-center">
-            <input type="radio" :id="'radio-' + index" :value="map" v-model="selectedMap"
-              class="radio radio-sm text-gray-600" />
-            <label :for="'radio-' + index" class="ml-1 text-sm font-medium text-gray-800 cursor-pointer">
+            <button @click="selectedMap = map"
+              :class="{ 'bg-primary text-white': selectedMap === map, 'bg-gray-200 text-gray-800': selectedMap !== map }"
+              class="p-2 rounded-md font-medium text-sm cursor-pointer hover:bg-brandSky-7 hover:text-white transition-colors duration-200">
               {{ map.name }}
-            </label>
+            </button>
           </div>
         </div>
 
