@@ -50,6 +50,12 @@ class SectorController extends Controller
             'image_path' => $imagePath,
         ]);
 
+        activity('create')
+            ->performedOn($sector)
+            ->causedBy(auth()->user())
+            ->withProperties(['create' => $sector->getChanges()])
+            ->log('created new sector');  
+
         return response()->json([
             'message' => 'Sector created successfully',
             'sector' => $sector,
@@ -73,6 +79,12 @@ class SectorController extends Controller
         $sector = Sector::findOrFail($id);
         $sector->delete();
 
+        activity('delete')
+            ->performedOn($sector)
+            ->causedBy(auth()->user())
+            ->withProperties(['delete' => $sector->getChanges()])
+            ->log('delete sector');  
+
         return response()->json(['message' => 'Sector deleted successfully']);
     }
 
@@ -84,6 +96,12 @@ class SectorController extends Controller
             'name' => request('name'),
             'description' => request('description'),
         ]);
+
+        activity('update')
+            ->performedOn($sector)
+            ->causedBy(auth()->user())
+            ->withProperties(['update' => $sector->getChanges()])
+            ->log('update sector');  
 
         return response()->json(['message' => 'Sector updated successfully', 'sector' => $sector]);
     }
@@ -114,6 +132,12 @@ class SectorController extends Controller
         $sector->update([
             'image_path' => $filePath,
         ]);
+
+        activity('update')
+            ->performedOn($sector)
+            ->causedBy(auth()->user())
+            ->withProperties(['update' => $sector->getChanges()])
+            ->log('update sector image thumbnail');  
 
         return response()->json([
             'message' => 'Thumbnail updated successfully',

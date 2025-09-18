@@ -75,6 +75,12 @@ class DataInputController extends Controller
         $sectorChild->data = $existingData;
         $sectorChild->save();
 
+        activity('input')
+            ->performedOn($sectorChild)
+            ->causedBy(auth()->user())
+            ->withProperties(['input' => $sectorChild->getChanges()])
+            ->log('input new data');  
+
         return response()->json([
             'message' => 'Data appended successfully',
             'child' => $sectorChild,
@@ -136,6 +142,12 @@ class DataInputController extends Controller
         // Save back
         $child->data = json_encode($dataArray);
         $child->save();
+
+        activity('update')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['update' => $child->getChanges()])
+            ->log('update data row');  
 
         return response()->json([
             'message' => 'Child data updated successfully',
@@ -242,6 +254,12 @@ class DataInputController extends Controller
         $child->data = $mergedData; // Eloquent will json_encode automatically
         $child->save();
 
+        activity('upload')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['upload' => $child->getChanges()])
+            ->log('upload bulk data');  
+
         return response()->json([
             'message'    => 'Data uploaded and appended successfully',
             'rows_added' => count($dataToAppend),
@@ -291,6 +309,12 @@ class DataInputController extends Controller
         // Save updated JSON
         $child->data = json_encode($dataArray);
         $child->save();
+
+        activity('delete')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['delete' => $child->getChanges()])
+            ->log('delete data row');  
 
         return response()->json([
             'message' => 'Row deleted successfully',

@@ -69,6 +69,12 @@ class ChildController extends Controller
         $child->file_path = $filePath;
         $child->save();
 
+        activity('create')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['create' => $child->getChanges()])
+            ->log('created new child table');        
+
         return response()->json([
             'message' => 'Child sector created successfully',
             'data' => $child,
@@ -98,14 +104,20 @@ class ChildController extends Controller
             ], 422);
         }
 
-        $sectorChild = ChildSector::findOrFail($validated['child_id']);
+        $child = ChildSector::findOrFail($validated['child_id']);
 
-        $sectorChild->data = []; // Clear data
-        $sectorChild->save();
+        $child->data = []; // Clear data
+        $child->save();
+
+        activity('clear')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['clear' => $child->getChanges()])
+            ->log('clear child data');  
 
         return response()->json([
             'message' => 'Data cleared successfully',
-            'child' => $sectorChild
+            'child' => $child
         ]);
     }
 
@@ -141,6 +153,12 @@ class ChildController extends Controller
 
         $child->delete();
 
+        activity('delete')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['delete' => $child->getChanges()])
+            ->log('delete child table');          
+
         return response()->json([
             'message' => 'Child deleted successfully',
         ]);
@@ -171,6 +189,12 @@ class ChildController extends Controller
 
         $child->data_template = $template;
         $child->save();
+
+        activity('update')
+            ->performedOn($child)
+            ->causedBy(auth()->user())
+            ->withProperties(['update' => $child->getChanges()])
+            ->log('update data template');  
 
         return response()->json([
             'message' => 'Data template updated successfully',

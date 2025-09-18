@@ -28,6 +28,11 @@ class InProfileController extends Controller
             'data' => $validated['data'],
         ]);
 
+        activity('create')
+            ->performedOn($profile)
+            ->causedBy(auth()->user())
+            ->withProperties(['create' => $profile->getChanges()])
+            ->log('created new IN Profile');  
 
         return response()->json(['message' => 'profile added successfully', 'profile' => $profile]);
     }
@@ -42,6 +47,12 @@ class InProfileController extends Controller
     {
         $profile = InProfile::findOrFail($id);
         $profile->delete();
+
+        activity('delete')
+            ->performedOn($profile)
+            ->causedBy(auth()->user())
+            ->withProperties(['delete' => $profile->getChanges()])
+            ->log('delete IN Profile');  
 
         return response()->json(['message' => 'profile deleted successfully']);
     }

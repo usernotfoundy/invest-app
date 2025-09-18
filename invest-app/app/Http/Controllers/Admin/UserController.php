@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Activitylog\Models\Activity;
 
 class UserController extends Controller
 {
@@ -34,6 +35,12 @@ class UserController extends Controller
     {
         $user = User::findOrFail($userId);
         $user->assignRole($roleName);
+
+        activity('assign')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['assign' => $user->getChanges()])
+            ->log('assign role to user');  
 
         return response()->json(['message' => "Role {$roleName} assigned to {$user->name}"]);
     }
@@ -66,6 +73,12 @@ class UserController extends Controller
         $user = User::findOrFail($validated['user_id']);
         $user->assigned_sector = $validated['sector_id'];
         $user->save();
+
+        activity('assign')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['assign' => $user->getChanges()])
+            ->log('assign user to sector');          
 
         return response()->json([
             'message' => "Sector assigned successfully to {$user->name}",
@@ -110,7 +123,7 @@ class UserController extends Controller
         return response()->json(['roles' => $roles]);
     } 
 
-        public function deleteUser($id)
+    public function deleteUser($id)
     {
         $user = User::find($id);
 
@@ -126,5 +139,31 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted successfully']);
+    }
+
+    public function getLogs()
+    {
+        $logs = Activity::with(['causer', 'subject'])->get()->map(function ($log) {
+            return [
+                'id' => $log->id,
+                'log_name' => $log->log_name,
+                'description' => $log->description,
+                'subject' => $log->subject ? [
+                    'type' => class_basename($log->subject_type),
+                    'id'   => $log->subject_id,
+                    'name' => $log->subject->name ?? null,  // example: ChildSector name
+                    'file_path' => $log->subject->file_path ?? null,
+                ] : null,
+                'causer' => $log->causer ? [
+                    'id'    => $log->causer_id,
+                    'name'  => $log->causer->name ?? null,
+                    'email' => $log->causer->email ?? null,
+                ] : null,
+                'properties' => $log->properties,
+                'created_at' => $log->created_at,
+            ];
+        });
+
+        return response()->json($logs);
     }
 }

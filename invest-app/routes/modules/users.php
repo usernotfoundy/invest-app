@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(
             ->name('get-users');
         Route::get('/roles', [UserController::class, 'viewRoles'])
             ->name('view-roles');
+        Route::get('/logs', [UserController::class, 'getLogs'])
+            ->name('logs');
     }
 );
-
-//auth:sanctum', 'role:admin

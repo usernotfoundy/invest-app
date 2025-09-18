@@ -40,6 +40,11 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         // Auth::login($user);
+        activity('create')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['create' => $user->getChanges()])
+            ->log('created new user');  
 
         return response()->noContent();
     }
