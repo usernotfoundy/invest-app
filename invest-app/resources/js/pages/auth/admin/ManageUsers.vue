@@ -181,10 +181,10 @@ function openModal() {
       <div class="col-span-3 shadow-sm rounded-lg">
         <div class="overflow-auto rounded-lg bg-white"
           style="height: calc(100dvh - 290px); max-height: calc(100dvh - 290px);">
-          <table class="table table-hover table-auto max-h-64 overflow-y-auto w-full">
+          <table class="table table-hover table-auto max-h-64 overflow-y-auto overflow-x-auto w-full">
             <thead class="sticky top-0 bg-base-100 z-10 text-textColor-1 uppercase">
               <tr>
-                <th>ID</th>
+                <th>Status</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -204,7 +204,10 @@ function openModal() {
               <!-- Actual Users -->
               <tr v-else v-for="user in userStore.usersList" :key="user.id"
                 class="hover:bg-slate-100 transition-colors">
-                <th>{{ user.id }}</th>
+                <td>
+                  <div v-if="user.email_verified_at" class="badge badge-xs badge-soft badge-primary rounded-full">Verfiied</div>
+                  <div v-else class="badge badge-xs badge-soft badge-error rounded-full">Unverified</div>
+                </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.role }}</td>
@@ -275,8 +278,6 @@ function openModal() {
         <table class="table table-xs table-pin-rows w-full">
           <thead class="font-bold text-textColor-1">
             <tr>
-              <td>ID</td>
-              <td>Log</td>
               <td>User</td>
               <td>Performed At</td>
             </tr>
@@ -299,7 +300,6 @@ function openModal() {
             <!-- Logs -->
             <tr v-else v-for="log in [...logStore.logs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))"
               :key="log.id" class="hover:bg-slate-100 transition-colors">
-              <td>{{ log.id }}</td>
               <td>{{ log.description }}</td>
               <td>{{ log.causer?.name || "Unknown" }}</td>
               <td>{{ new Date(log.created_at).toLocaleString() }}</td>

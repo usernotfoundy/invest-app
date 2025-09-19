@@ -168,6 +168,7 @@ export const useUserStore = defineStore("user", {
             email: user.email,
             role: user.role || "No role",
             assigned_sector: user.assigned_sector || "Unassigned",
+            email_verified_at: user.email_verified_at || null,
           }));
           this.lastFetchedUsers = now;
         } else {
